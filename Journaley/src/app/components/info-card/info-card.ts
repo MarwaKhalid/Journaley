@@ -10,4 +10,12 @@ export class InfoCard {
   @Input() title: string = '';
   @Input() address: string = '';
   @Input() review: string = '';
+
+  onEditClick(): void {
+    console.log('Edit button clicked!');
+  }
+
+  onDeleteClick(): void {
+    console.log('Delete button clicked!');
+  }
 }

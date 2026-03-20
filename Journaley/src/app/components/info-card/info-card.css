@@ -5,3 +5,13 @@
 .sub-text {
   font-size: var(--text-xs);
 }
+
+.icon-btn {
+  background-color: var(--color-beige);
+  cursor: pointer;
+  border: none;
+}
+
+.icon-btn:hover i {
+  color: var(--color-red);
+}
