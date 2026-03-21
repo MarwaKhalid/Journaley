@@ -1,0 +1,21 @@
+.tab-bar {
+  background-color: var(--color-beige-60);
+}
+
+.tab-btn {
+  background-color: var(--color-beige);
+  border: none;
+  width: 75%;
+}
+
+.tab-btn span {
+  font-size: var(--text-sm);
+}
+
+.content-active {
+  color: var(--color-black);
+}
+
+.content-inactive {
+  color: var(--color-inactive);
+}

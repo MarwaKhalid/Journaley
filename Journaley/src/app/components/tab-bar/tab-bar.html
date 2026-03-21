@@ -1,0 +1,49 @@
+<div class="tab-bar d-inline-flex rounded-pill gap-2 p-2">
+  <button
+    class="btn tab-btn d-flex align-items-center gap-1 rounded-pill"
+    (click)="setContent('Restaurant'); onClick()"
+  >
+    <i
+      class="bi bi-fork-knife"
+      [ngClass]="content === 'Restaurant' ? 'content-active' : 'content-inactive'"
+    ></i>
+    <span [ngClass]="content === 'Restaurant' ? 'content-active' : 'content-inactive'"
+      >Restaurant</span
+    >
+  </button>
+
+  <button
+    class="btn tab-btn d-flex align-items-center gap-1 rounded-pill"
+    (click)="setContent('Hotel'); onClick()"
+  >
+    <i
+      class="bi bi-building"
+      [ngClass]="content === 'Hotel' ? 'content-active' : 'content-inactive'"
+    ></i>
+    <span [ngClass]="content === 'Hotel' ? 'content-active' : 'content-inactive'">Hotel</span>
+  </button>
+
+  <button
+    class="btn tab-btn d-flex align-items-center gap-1 rounded-pill"
+    (click)="setContent('Activities'); onClick()"
+  >
+    <i
+      class="bi bi-camera-fill"
+      [ngClass]="content === 'Activities' ? 'content-active' : 'content-inactive'"
+    ></i>
+    <span [ngClass]="content === 'Activities' ? 'content-active' : 'content-inactive'"
+      >Activities</span
+    >
+  </button>
+
+  <button
+    class="btn tab-btn d-flex align-items-center gap-1 rounded-pill"
+    (click)="setContent('Personal'); onClick()"
+  >
+    <i
+      class="bi bi-heart-fill"
+      [ngClass]="content === 'Personal' ? 'content-active' : 'content-inactive'"
+    ></i>
+    <span [ngClass]="content === 'Personal' ? 'content-active' : 'content-inactive'">Personal</span>
+  </button>
+</div>
