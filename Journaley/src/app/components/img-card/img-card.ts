@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-img-card',
@@ -10,16 +10,13 @@ export class ImgCard {
   @Input() filename: string = '';
   @Input() title: string = '';
   @Input() dates: string = '';
+  @Output() btnClick = new EventEmitter<void>();
 
   get src(): string {
     return this.filename ? 'assets/images/' + this.filename : '...';
   }
 
-  onEditClick(): void {
-    console.log('Edit button clicked!');
-  }
-
-  onDeleteClick(): void {
-    console.log('Delete button clicked!');
+  onClick() {
+    this.btnClick.emit();
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 type ButtonDirection = 'left' | 'right';
 
@@ -11,4 +11,9 @@ type ButtonDirection = 'left' | 'right';
 })
 export class IconButton {
   @Input() direction: ButtonDirection = 'left';
+  @Output() btnClick = new EventEmitter<void>();
+
+  onClick() {
+    this.btnClick.emit();
+  }
 }

@@ -28,7 +28,6 @@ export class IconTextButton {
   }
 
   onClick() {
-    console.log(this.btn_type);
     this.btnClick.emit();
   }
 }

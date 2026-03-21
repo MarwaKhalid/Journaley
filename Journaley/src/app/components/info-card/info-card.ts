@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-info-card',
@@ -10,12 +10,9 @@ export class InfoCard {
   @Input() title: string = '';
   @Input() address: string = '';
   @Input() review: string = '';
+  @Output() btnClick = new EventEmitter<void>();
 
-  onEditClick(): void {
-    console.log('Edit button clicked!');
-  }
-
-  onDeleteClick(): void {
-    console.log('Delete button clicked!');
+  onClick() {
+    this.btnClick.emit();
   }
 }
