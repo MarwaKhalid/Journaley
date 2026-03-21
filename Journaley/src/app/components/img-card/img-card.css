@@ -1,3 +1,13 @@
 .subtitle {
   color: var(--color-grey);
 }
+
+.icon-btn {
+  background-color: var(--color-beige);
+  cursor: pointer;
+  border: none;
+}
+
+.icon-btn:hover i {
+  color: var(--color-red);
+}
