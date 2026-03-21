@@ -1,0 +1,38 @@
+button {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-lg);
+  border: none;
+}
+
+.delete {
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+
+.cancel {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-tan);
+  color: var(--color-black);
+}
+
+.cancel:focus,
+.cancel:active,
+.cancel:focus-visible {
+  border: 1px solid var(--color-tan) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.submit {
+  background-color: var(--color-primary);
+  color: var(--color-black);
+}
+
+.regular {
+  background-color: var(--color-beige);
+  color: var(--color-black);
+}
+
+.inactive {
+  color: var(--color-inactive);
+}

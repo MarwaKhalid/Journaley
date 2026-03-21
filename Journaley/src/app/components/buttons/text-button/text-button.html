@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="btn w-100 sans"
+  (click)="onClick()"
+  [ngClass]="[btn_type, active ? '' : 'inactive']"
+>
+  {{ placeholder }}
+</button>
