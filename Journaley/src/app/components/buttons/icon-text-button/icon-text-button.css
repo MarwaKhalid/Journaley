@@ -1,6 +1,11 @@
-.add-btn {
+button {
   border: none;
   background-color: var(--color-tan);
   font-weight: var(--font-weight-bold);
   font-size: var(----text-xl);
+  width: 130px;
+}
+
+button:hover {
+  background-color: var(--color-tan);
 }
