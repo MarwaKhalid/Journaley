@@ -3,7 +3,34 @@
     <div class="card-body">
       <p class="card-text title mb-0">Login</p>
       <p class="card-text sub-text">Welcome back to Journaley</p>
-      <app-text-button btn_type="submit" placeholder="Login"></app-text-button>
+
+      <form>
+        <div class="mb-3">
+          <app-input-field
+            label="Email"
+            placeholder="Email"
+            id="login-email"
+            [(value)]="email"
+          ></app-input-field>
+        </div>
+        <div class="mb-3">
+          <app-input-field
+            label="Password"
+            placeholder="Password"
+            id="login-pass"
+            type="password"
+            [(value)]="password"
+          ></app-input-field>
+        </div>
+        <div class="mt-2">
+          <app-text-button
+            btn_type="submit"
+            placeholder="Login"
+            (btnClick)="onClick()"
+          ></app-text-button>
+        </div>
+      </form>
+
       <p class="card-text sub-text text-center mt-2">
         Don't have an account? <a href="#">Register</a>
       </p>
