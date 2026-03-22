@@ -3,7 +3,51 @@
     <div class="card-body">
       <p class="card-text title mb-0">Register</p>
       <p class="card-text sub-text">Create your Journaley account</p>
-      <app-text-button btn_type="submit" placeholder="Register"></app-text-button>
+
+      <form>
+        <div class="mb-3">
+          <app-input-field
+            label="Name"
+            placeholder="Name"
+            id="register-name"
+            [(value)]="name"
+          ></app-input-field>
+        </div>
+        <div class="mb-3">
+          <app-input-field
+            label="Email"
+            placeholder="Email"
+            id="register-email"
+            [(value)]="email"
+          ></app-input-field>
+        </div>
+        <div class="mb-3">
+          <app-input-field
+            label="Password"
+            placeholder="Password"
+            id="register-pass"
+            type="password"
+            [(value)]="password"
+          ></app-input-field>
+        </div>
+        <div class="mb-3">
+          <app-input-field
+            label="Confirm Password"
+            placeholder="Password"
+            id="register-confirm-pass"
+            type="password"
+            [(value)]="confirm_password"
+          ></app-input-field>
+        </div>
+        <div class="mt-2">
+          <app-text-button
+            btn_type="submit"
+            placeholder="Register"
+            (btnClick)="onClick()"
+          ></app-text-button>
+        </div>
+      </form>
+
       <p class="card-text sub-text text-center mt-2">
         Already have an account? <a href="#">Login</a>
       </p>
