@@ -3,9 +3,6 @@
   flex-direction: column;
   align-items: stretch;
   gap: 0.5rem;
-  background-color: #b1d8a2;
-  padding: 1rem 1.25rem 1.25rem;
-  border-radius: 12px;
 }
 
 .description-label {

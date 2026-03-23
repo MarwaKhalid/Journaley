@@ -15,12 +15,6 @@
   font-size: var(--text-xl);
 }
 
-.search-shell {
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  background-color: #b1d8a2;
-}
-
 .search-input-wrap {
   position: relative;
 }
