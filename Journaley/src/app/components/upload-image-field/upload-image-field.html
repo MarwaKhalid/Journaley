@@ -1,1 +1,33 @@
-<p>upload-image-field works!</p>
+<div class="upload-image-field">
+  <label class="upload-label" [for]="inputId">{{ label }}</label>
+  <div
+    class="upload-dropzone"
+    [class.has-image]="previewUrl"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+  >
+    @if (previewUrl) {
+      <img class="upload-preview" [src]="previewUrl" alt="" />
+      <div class="upload-overlay" aria-hidden="true"></div>
+    }
+    <div class="upload-content">
+      <button
+        type="button"
+        class="upload-circle-btn"
+        (click)="pickFile()"
+        aria-label="Select image"
+      >
+        <i class="bi bi-plus-lg"></i>
+      </button>
+      <p class="upload-hint sans">{{ hint }}</p>
+    </div>
+    <input
+      #fileInput
+      [id]="inputId"
+      type="file"
+      class="upload-file-input"
+      [accept]="accept"
+      (change)="onInputChange($event)"
+    />
+  </div>
+</div>

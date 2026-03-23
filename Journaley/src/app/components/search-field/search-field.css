@@ -1,0 +1,68 @@
+.search-field {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.search-label {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-xl);
+}
+
+.search-shell {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background-color: #b1d8a2;
+}
+
+.search-input-wrap {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  z-index: 1;
+  color: var(--color-black);
+  font-size: 1.125rem;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.search-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 1.25rem 0.65rem 2.85rem;
+  border: none;
+  border-radius: 9999px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: inherit;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.search-input::placeholder {
+  color: var(--color-black);
+  font-weight: var(--font-weight-bold);
+  opacity: 1;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Reset Safari / Chrome search decoration */
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration {
+  appearance: none;
+}

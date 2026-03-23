@@ -1,1 +1,20 @@
-<p>search-field works!</p>
+<div class="search-field">
+  @if (label) {
+    <label [for]="id" class="search-label">{{ label }}</label>
+  }
+  <div class="search-shell">
+    <div class="search-input-wrap">
+      <i class="bi bi-search search-icon" aria-hidden="true"></i>
+      <input
+        type="search"
+        class="search-input"
+        [id]="id"
+        [name]="id"
+        [placeholder]="placeholder"
+        autocomplete="off"
+        [(ngModel)]="value"
+        (ngModelChange)="valueChange.emit($event)"
+      />
+    </div>
+  </div>
+</div>
