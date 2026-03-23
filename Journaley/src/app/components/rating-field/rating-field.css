@@ -1,0 +1,55 @@
+.rating-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+  border-radius: 12px;
+  background-color: #b1d8a2;
+}
+
+.rating-label {
+  margin: 0;
+  color: var(--color-black);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-xl);
+}
+
+.rating-stars {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rating-star-slot,
+.rating-star-btn {
+  display: inline-flex;
+  padding: 0.15rem;
+  line-height: 1;
+}
+
+.rating-star-btn {
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  color: inherit;
+}
+
+.rating-star-btn:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+.rating-icon {
+  color: var(--color-black);
+  font-size: 1.5rem;
+}
+
+.rating-star-slot .bi-star,
+.rating-star-btn .bi-star {
+  opacity: 0.4;
+}

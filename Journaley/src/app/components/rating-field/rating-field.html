@@ -1,1 +1,30 @@
-<p>rating-field works!</p>
+<div class="rating-field">
+  <span class="rating-label" [id]="id + '-label'">{{ label }}</span>
+  <div class="rating-stars" role="group" [attr.aria-label]="summaryLabel">
+    @for (star of starIndices; track star) {
+      @if (readonly) {
+        <span class="rating-star-slot" aria-hidden="true">
+          <i
+            class="bi rating-icon"
+            [class.bi-star-fill]="star <= filledCount"
+            [class.bi-star]="star > filledCount"
+          ></i>
+        </span>
+      } @else {
+        <button
+          type="button"
+          class="rating-star-btn"
+          [attr.aria-label]="'Set rating to ' + star + ' of ' + maxStars"
+          [attr.aria-pressed]="star <= filledCount"
+          (click)="select(star)"
+        >
+          <i
+            class="bi rating-icon"
+            [class.bi-star-fill]="star <= filledCount"
+            [class.bi-star]="star > filledCount"
+          ></i>
+        </button>
+      }
+    }
+  </div>
+</div>
