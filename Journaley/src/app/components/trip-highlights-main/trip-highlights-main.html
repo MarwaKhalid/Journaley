@@ -1,0 +1,25 @@
+<section class="thm-panel">
+  <div class="thm-header-wrap">
+    <h2 class="thm-title">{{ heading }}</h2>
+    <div class="thm-edit-wrap">
+      <app-icon-text-button
+        btn_type="edit"
+        placeholder="Edit Trip"
+        variant="muted"
+        (btnClick)="onEdit()"
+      ></app-icon-text-button>
+    </div>
+  </div>
+  <p class="thm-body">{{ bodyText }}</p>
+  <div class="thm-cards">
+    @for (card of cards; track card.label) {
+      <article class="thm-card">
+        <div class="thm-card-img-wrap">
+          <img [src]="card.imageSrc" [alt]="card.label" loading="lazy" />
+        </div>
+        <p class="thm-card-label">{{ card.label }}</p>
+        <p class="thm-card-value">{{ card.value }}</p>
+      </article>
+    }
+  </div>
+</section>

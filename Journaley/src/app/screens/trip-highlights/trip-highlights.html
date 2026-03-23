@@ -1,0 +1,26 @@
+<nav class="navbar nav px-3">
+  <span class="navbar-brand mb-0 nav-text">Journaley</span>
+  <button type="button" class="btn nav-text">Logout</button>
+</nav>
+
+<div class="trip-highlights-body">
+  <aside class="trip-highlights-sidebar">
+    <app-section-list
+      title="Trips"
+      [items]="tripListItems"
+      (addClick)="onAddTrip()"
+      (deleteClick)="onDeleteTrip($event)"
+    ></app-section-list>
+  </aside>
+
+  <div class="trip-highlights-main-column">
+    <div class="mt-5">
+      <p class="title text-center mb-0">Trip highlights</p>
+      <p class="sub-title text-center">Capture what made this trip special.</p>
+    </div>
+
+    <div class="trip-highlights-main container-fluid px-3 px-md-4 py-4 pb-5">
+      <app-trip-highlights-main (editTrip)="onEditTrip()"></app-trip-highlights-main>
+    </div>
+  </div>
+</div>

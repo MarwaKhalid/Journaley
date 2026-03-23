@@ -1,0 +1,11 @@
+<div class="description-field">
+  <label [for]="id" class="description-label">{{ label }}</label>
+  <textarea
+    class="description-textarea"
+    [id]="id"
+    [placeholder]="placeholder"
+    [rows]="rows"
+    [(ngModel)]="value"
+    (ngModelChange)="valueChange.emit($event)"
+  ></textarea>
+</div>

@@ -2,10 +2,28 @@ button {
   border: none;
   background-color: var(--color-tan);
   font-weight: var(--font-weight-bold);
-  font-size: var(----text-xl);
+  font-size: var(--text-xl);
   width: 130px;
 }
 
 button:hover {
   background-color: var(--color-tan);
+}
+
+:host.icon-text-button--muted button {
+  width: auto;
+  min-width: unset;
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  background-color: #e0dcd3;
+  font-size: var(--text-sm);
+}
+
+:host.icon-text-button--muted button:hover {
+  background-color: #d4d0c7;
+}
+
+:host.icon-text-button--muted button:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
 }
