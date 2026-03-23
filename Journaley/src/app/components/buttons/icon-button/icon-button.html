@@ -1,3 +1,8 @@
-<button type="button" class="btn icon-btn" (click)="onClick()">
-  <i class="bi" [ngClass]="direction === 'left' ? 'bi-caret-left-fill' : 'bi-caret-right-fill'"></i>
+<button
+  type="button"
+  class="btn icon-btn"
+  [attr.aria-label]="ariaLabel || null"
+  (click)="onClick()"
+>
+  <i class="bi" [ngClass]="'bi-' + iconClass" aria-hidden="true"></i>
 </button>

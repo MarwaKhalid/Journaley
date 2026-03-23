@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IconButton } from '../buttons/icon-button/icon-button';
 
 export interface SectionListItem {
   id: string;
@@ -9,7 +10,7 @@ export interface SectionListItem {
 
 @Component({
   selector: 'app-section-list',
-  imports: [],
+  imports: [IconButton],
   templateUrl: './section-list.html',
   styleUrl: './section-list.css',
 })
@@ -18,9 +19,14 @@ export class SectionList {
   @Input() items: SectionListItem[] = [];
   @Output() addClick = new EventEmitter<void>();
   @Output() deleteClick = new EventEmitter<SectionListItem>();
+  @Output() rowClick = new EventEmitter<SectionListItem>();
 
   onAdd(): void {
     this.addClick.emit();
+  }
+
+  onRowClick(item: SectionListItem): void {
+    this.rowClick.emit(item);
   }
 
   onDelete(item: SectionListItem): void {

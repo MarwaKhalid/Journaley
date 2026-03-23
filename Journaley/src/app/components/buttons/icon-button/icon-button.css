@@ -1,4 +1,27 @@
 .icon-btn {
-  background-color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.35rem;
   border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--color-black);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background-color: var(--color-beige-60);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+:host.icon-button--large .icon-btn {
+  padding: 0.15rem 0.25rem;
+  font-size: 2rem;
 }

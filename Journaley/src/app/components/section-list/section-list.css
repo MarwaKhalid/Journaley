@@ -22,24 +22,8 @@
   font-weight: var(--font-weight-bold);
 }
 
-.section-list-add {
-  display: inline-flex;
+.section-list-header app-icon-button {
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  padding: 0.15rem 0.25rem;
-  border: none;
-  background: none;
-  color: var(--color-black);
-  font-size: 2rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.section-list-add:focus-visible {
-  outline: 2px solid var(--color-black);
-  outline-offset: 2px;
-  border-radius: 4px;
 }
 
 .section-list-items {
@@ -56,9 +40,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.7rem 1.1rem;
+  padding: 0.55rem 0.85rem 0.55rem 1.1rem;
   border-radius: 9999px;
-  background-color: var(#ded8c9);
+  background-color: var(--color-beige);
+  cursor: pointer;
 }
 
 .section-list-label {
@@ -69,22 +54,8 @@
   font-weight: var(--font-weight-bold);
 }
 
-.section-list-delete {
+.section-list-actions {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  border: none;
-  background: none;
-  color: var(--color-black);
-  font-size: 1.15rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.section-list-delete:focus-visible {
-  outline: 2px solid var(--color-black);
-  outline-offset: 2px;
-  border-radius: 4px;
 }
