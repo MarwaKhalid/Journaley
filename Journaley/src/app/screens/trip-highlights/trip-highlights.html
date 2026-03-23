@@ -3,34 +3,24 @@
   <button type="button" class="btn nav-text">Logout</button>
 </nav>
 
-<div class="mt-5">
-  <p class="title text-center mb-0">Trip highlights</p>
-  <p class="sub-title text-center">Capture what made this trip special.</p>
-</div>
+<div class="trip-highlights-body">
+  <aside class="trip-highlights-sidebar">
+    <app-section-list
+      title="Trips"
+      [items]="tripListItems"
+      (addClick)="onAddTrip()"
+      (deleteClick)="onDeleteTrip($event)"
+    ></app-section-list>
+  </aside>
 
-<div class="trip-highlights-main container py-4 pb-5">
-  <div class="highlights-stack">
-    <app-search-field id="trip-highlights-search" [(value)]="tripQuery"></app-search-field>
-    <app-upload-image-field
-      inputId="trip-highlights-cover"
-      (fileChange)="onCoverChange($event)"
-    ></app-upload-image-field>
-    <app-description-field
-      id="trip-highlights-description"
-      [(value)]="description"
-    ></app-description-field>
-    <app-rating-field
-      id="trip-highlights-rating"
-      [rating]="rating"
-      [readonly]="false"
-      (ratingChange)="rating = $event"
-    ></app-rating-field>
-    <div class="actions mt-2">
-      <app-text-button
-        btn_type="submit"
-        placeholder="Save highlights"
-        (btnClick)="onSave()"
-      ></app-text-button>
+  <div class="trip-highlights-main-column">
+    <div class="mt-5">
+      <p class="title text-center mb-0">Trip highlights</p>
+      <p class="sub-title text-center">Capture what made this trip special.</p>
+    </div>
+
+    <div class="trip-highlights-main container-fluid px-3 px-md-4 py-4 pb-5">
+      <app-trip-highlights-main (editTrip)="onEditTrip()"></app-trip-highlights-main>
     </div>
   </div>
 </div>

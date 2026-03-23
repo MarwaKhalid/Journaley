@@ -1,38 +1,32 @@
 import { Component } from '@angular/core';
-import { TextButton } from '../../components/buttons/text-button/text-button';
-import { DescriptionField } from '../../components/description-field/description-field';
-import { RatingField } from '../../components/rating-field/rating-field';
-import { SearchField } from '../../components/search-field/search-field';
-import { UploadImageField } from '../../components/upload-image-field/upload-image-field';
+import { TripHighlightsMain } from '../../components/trip-highlights-main/trip-highlights-main';
+import {
+  SectionList,
+  SectionListItem,
+} from '../../components/section-list/section-list';
 
 @Component({
   selector: 'app-trip-highlights',
-  imports: [
-    TextButton,
-    DescriptionField,
-    UploadImageField,
-    SearchField,
-    RatingField,
-  ],
+  imports: [SectionList, TripHighlightsMain],
   templateUrl: './trip-highlights.html',
   styleUrl: './trip-highlights.css',
 })
 export class TripHighlights {
-  tripQuery = '';
-  description = '';
-  rating = 0;
-  coverFile: File | null = null;
+  tripListItems: SectionListItem[] = [
+    { id: 'all', label: 'All cities', deletable: false },
+    { id: 'tokyo', label: 'Tokyo' },
+    { id: 'osaka', label: 'Osaka' },
+  ];
 
-  onCoverChange(file: File | null): void {
-    this.coverFile = file;
+  onAddTrip(): void {
+    console.log('Add trip');
   }
 
-  onSave(): void {
-    console.log('Trip highlights', {
-      tripQuery: this.tripQuery,
-      description: this.description,
-      rating: this.rating,
-      coverFile: this.coverFile,
-    });
+  onDeleteTrip(item: SectionListItem): void {
+    this.tripListItems = this.tripListItems.filter((row) => row.id !== item.id);
+  }
+
+  onEditTrip(): void {
+    console.log('Edit trip');
   }
 }

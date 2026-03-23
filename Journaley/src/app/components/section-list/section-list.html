@@ -1,0 +1,31 @@
+<div class="section-list">
+  <header class="section-list-header">
+    <h2 class="section-list-title">{{ title }}</h2>
+    <button
+      type="button"
+      class="section-list-add"
+      aria-label="Add"
+      (click)="onAdd()"
+    >
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <ul class="section-list-items">
+    @for (item of items; track item.id) {
+      <li class="section-list-row">
+        <span class="section-list-label">{{ item.label }}</span>
+        @if (item.deletable !== false) {
+          <button
+            type="button"
+            class="section-list-delete"
+            [attr.aria-label]="'Remove ' + item.label"
+            (click)="onDelete(item)"
+          >
+            <i class="bi bi-trash3" aria-hidden="true"></i>
+          </button>
+        }
+      </li>
+    }
+  </ul>
+</div>

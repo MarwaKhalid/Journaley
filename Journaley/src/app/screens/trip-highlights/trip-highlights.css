@@ -1,6 +1,7 @@
 :host {
-  display: block;
+  display: flex;
   min-height: 100vh;
+  flex-direction: column;
   background-color: var(--color-primary);
 }
 
@@ -24,7 +25,7 @@
 
 .nav {
   background-color: var(--color-beige);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-nav);
 }
 
 .nav-text {
@@ -35,12 +36,49 @@ button {
   border: none;
 }
 
-.trip-highlights-main {
-  max-width: 42rem;
+.trip-highlights-body {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  align-items: stretch;
+  min-height: 0;
 }
 
-.highlights-stack {
+.trip-highlights-sidebar {
   display: flex;
+  flex: 0 0 22%;
+  max-width: 280px;
+  min-width: 200px;
   flex-direction: column;
-  gap: 1.5rem;
+  background-color: var(--color-tan);
+}
+
+.trip-highlights-sidebar app-section-list {
+  display: block;
+  flex: 1;
+  min-height: 100%;
+}
+
+.trip-highlights-main-column {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.trip-highlights-main {
+  width: 100%;
+  max-width: min(100%, 1320px);
+  margin-inline: auto;
+}
+
+@media (max-width: 767.98px) {
+  .trip-highlights-body {
+    flex-direction: column;
+  }
+
+  .trip-highlights-sidebar {
+    max-width: none;
+    flex-basis: auto;
+  }
 }
