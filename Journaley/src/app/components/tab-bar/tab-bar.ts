@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tab-bar',
@@ -8,11 +8,13 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrl: './tab-bar.css',
 })
 export class TabBar {
-  content = 'Restaurant';
+  content = 'Restaurants';
   @Output() btnClick = new EventEmitter<void>();
+  @Output() categoryChange = new EventEmitter<string>();
 
   setContent(content: string): void {
     this.content = content;
+    this.categoryChange.emit(content);
   }
 
   onClick() {

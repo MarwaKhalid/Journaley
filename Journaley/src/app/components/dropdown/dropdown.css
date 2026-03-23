@@ -1,3 +1,7 @@
+.dropdown--no-label {
+  margin-bottom: 0;
+}
+
 label,
 select {
   font-size: var(--text-sm);
