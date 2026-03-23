@@ -37,15 +37,6 @@ body {
   font-family: sans-serif;
 }
 
-.nav {
-  background-color: var(--color-beige);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.nav-text {
-  font-size: var(--text-xl);
-}
-
 .bi {
   -webkit-text-stroke: 0.5px;
 }

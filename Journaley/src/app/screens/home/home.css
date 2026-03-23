@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  background-color: var(--color-primary);
+  min-height: 100vh;
+}
+
+.title {
+  color: var(--color-black);
+  font-size: var(--text-2xl);
+}
+
+.sub-title {
+  color: var(--color-grey);
+  font-size: var(--text-xl);
+}
+
+.sub-nav-text {
+  font-size: var(--text-sm);
+}
+
+.sub-nav {
+  background-color: var(--color-tan);
+}
+
+.nav {
+  background-color: var(--color-beige);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.nav-text {
+  font-size: var(--text-xl);
+}
+
+button {
+  border: none;
+}
