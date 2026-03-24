@@ -17,3 +17,26 @@
   <button class="btn sub-nav-text">Africa</button>
   <button class="btn sub-nav-text">Oceania</button>
 </nav>
+
+<div class="carousel p-3">
+  <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+    <app-search-field
+      id="country-search"
+      placeholder="Search by name"
+      [(value)]="searchQuery"
+    ></app-search-field>
+    <app-icon-text-button class="text-nowrap" placeholder="Add Entry"> </app-icon-text-button>
+  </div>
+  <p-carousel
+    [value]="countries()"
+    [numVisible]="3"
+    [numScroll]="1"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+  >
+    <ng-template let-country pTemplate="item">
+      <app-img-card [title]="country.name" [filename]="country.filename" [showBtn]="true">
+      </app-img-card>
+    </ng-template>
+  </p-carousel>
+</div>
