@@ -31,10 +31,31 @@
   font-size: var(--text-xl);
 }
 
+a.nav-brand-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.nav-brand-link:hover {
+  color: inherit;
+  opacity: 0.85;
+}
+
 button {
   border: none;
 }
 
 .carousel {
   background-color: var(--color-beige);
+}
+
+.home-country-tile {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.home-country-tile:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 4px;
+  border-radius: 4px;
 }

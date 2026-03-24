@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -10,6 +11,8 @@ import { IconTextButton } from '../../components/buttons/icon-text-button/icon-t
 interface Country {
   name: string;
   filename: string;
+  /** URL segment for `/trip-highlights/:countryKey`. */
+  slug: string;
 }
 
 @Component({
@@ -17,6 +20,7 @@ interface Country {
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     CarouselModule,
     ButtonModule,
     TagModule,
@@ -28,17 +32,28 @@ interface Country {
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
+  private readonly router = inject(Router);
+
   searchQuery = '';
   countries = signal<Country[]>([]);
+  /** Countries shown in the carousel after search. */
+  visibleCountries = computed(() => {
+    const q = this.searchQuery.trim().toLowerCase();
+    const all = this.countries();
+    if (!q) {
+      return all;
+    }
+    return all.filter((c) => c.name.toLowerCase().includes(q));
+  });
   responsiveOptions: any[] = [];
 
   ngOnInit() {
     this.countries.set([
-      { name: 'Japan', filename: 'Japan.png' },
-      { name: 'USA', filename: 'USA.png' },
-      { name: 'Italy', filename: 'Italy.png' },
-      { name: 'Brazil', filename: 'Brazil.png' },
-      { name: 'France', filename: 'France.png' },
+      { name: 'Japan', filename: 'Japan.png', slug: 'japan' },
+      { name: 'USA', filename: 'USA.png', slug: 'usa' },
+      { name: 'Italy', filename: 'Italy.png', slug: 'italy' },
+      { name: 'Brazil', filename: 'Brazil.png', slug: 'brazil' },
+      { name: 'France', filename: 'France.png', slug: 'france' },
     ]);
     this.responsiveOptions = [
       { breakpoint: '1400px', numVisible: 3, numScroll: 1 },
@@ -46,5 +61,9 @@ export class Home implements OnInit {
       { breakpoint: '767px', numVisible: 1, numScroll: 1 },
       { breakpoint: '575px', numVisible: 1, numScroll: 1 },
     ];
+  }
+
+  openCountryTrips(country: Country): void {
+    this.router.navigate(['/trip-highlights', country.slug]);
   }
 }

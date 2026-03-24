@@ -1,5 +1,5 @@
 <nav class="navbar nav px-3">
-  <span class="navbar-brand mb-0 nav-text">Journaley</span>
+  <a routerLink="/" class="navbar-brand mb-0 nav-text nav-brand-link">Journaley</a>
   <button type="button" class="btn nav-text">Logout</button>
 </nav>
 
@@ -17,7 +17,7 @@
 
   <div class="sketchbook-main">
     <div class="sketchbook-main-inner container-fluid py-3 pb-5">
-      <a routerLink="/trip-highlights" class="sketchbook-back">← Back to trip</a>
+      <a [routerLink]="highlightsBackLink" class="sketchbook-back">← Back to trip</a>
 
       <div class="text-center mt-3 mb-4">
         <h1 class="sketchbook-page-title mb-1">Trip Sketchbook</h1>

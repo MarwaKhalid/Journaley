@@ -48,6 +48,8 @@ export class TripSketchbook {
   tripId = '';
   /** Shown under the page title when known (router state from highlights, or derived from id). */
   tripDisplayName = '';
+  /** From trip-highlights navigation state; used so Back returns to the same country filter. */
+  highlightsCountryKey = '';
 
   cityItems: SectionListItem[] = [
     { id: 'tokyo', label: 'Tokyo' },
@@ -137,13 +139,23 @@ export class TripSketchbook {
     return this.activeCategory === 'Personal';
   }
 
+  /** Target for "Back to trip" — same country highlights when we have a `countryKey` from highlights. */
+  get highlightsBackLink(): string[] {
+    return this.highlightsCountryKey
+      ? ['/trip-highlights', this.highlightsCountryKey]
+      : ['/trip-highlights'];
+  }
+
   private applyTripContextFromRoute(): void {
-    const st = history.state as { tripName?: string };
+    const st = history.state as { tripName?: string; countryKey?: string };
     if (typeof st?.tripName === 'string' && st.tripName.trim()) {
       this.tripDisplayName = st.tripName.trim();
-      return;
+    } else {
+      this.tripDisplayName = this.tripId ? this.titleCaseFromTripId(this.tripId) : '';
     }
-    this.tripDisplayName = this.tripId ? this.titleCaseFromTripId(this.tripId) : '';
+    const key = st?.countryKey;
+    this.highlightsCountryKey =
+      typeof key === 'string' && key.trim() ? key.trim().toLowerCase() : '';
   }
 
   /** Fallback label when navigation state does not include `tripName` (e.g. refresh). */
