@@ -50,14 +50,13 @@ export class TripSketchbook {
   tripDisplayName = '';
 
   cityItems: SectionListItem[] = [
-    { id: 'all', label: 'All cities', deletable: false },
     { id: 'tokyo', label: 'Tokyo' },
     { id: 'osaka', label: 'Osaka' },
   ];
 
   activeCategory = 'Restaurants';
-  selectedCityId = 'all';
-  selectedCity = 'All cities';
+  selectedCityId = this.cityItems[0]?.id ?? '';
+  selectedCity = this.cityItems[0]?.label ?? '';
   searchQuery = '';
   ratingFilter = 'all';
   sortFilter = 'name-asc';
@@ -120,6 +119,19 @@ export class TripSketchbook {
       category: 'Activities',
     },
   ];
+
+  constructor() {
+    const route = inject(ActivatedRoute);
+    route.paramMap
+      .pipe(
+        takeUntilDestroyed(),
+        map((pm) => pm.get('tripId') ?? ''),
+      )
+      .subscribe((id) => {
+        this.tripId = id;
+        this.applyTripContextFromRoute();
+      });
+  }
 
   get isPersonalView(): boolean {
     return this.activeCategory === 'Personal';
@@ -200,11 +212,15 @@ export class TripSketchbook {
 
   onDeleteCity(item: SectionListItem): void {
     this.cityItems = this.cityItems.filter((c) => c.id !== item.id);
+    if (this.selectedCityId === item.id) {
+      const next = this.cityItems[0];
+      this.selectedCityId = next?.id ?? '';
+      this.selectedCity = next?.label ?? '';
+    }
   }
 
   onAddEntry(): void {
-    const cityId =
-      this.selectedCityId === 'all' ? 'tokyo' : this.selectedCityId;
+    const cityId = this.selectedCityId || this.cityItems[0]?.id || 'tokyo';
     const tab = this.activeCategory;
     if (tab !== 'Restaurants' && tab !== 'Notes' && tab !== 'Activities') {
       return;
