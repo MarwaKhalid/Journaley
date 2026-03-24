@@ -17,6 +17,8 @@ export interface SectionListItem {
 export class SectionList {
   @Input({ required: true }) title!: string;
   @Input() items: SectionListItem[] = [];
+  /** When set, that row id gets selected styling (e.g. current city filter). */
+  @Input() selectedId: string | null = null;
   @Output() addClick = new EventEmitter<void>();
   @Output() deleteClick = new EventEmitter<SectionListItem>();
   @Output() rowClick = new EventEmitter<SectionListItem>();

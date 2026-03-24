@@ -8,6 +8,7 @@
     <app-section-list
       title="Cities"
       [items]="cityItems"
+      [selectedId]="selectedCityId"
       (addClick)="onAddCity()"
       (deleteClick)="onDeleteCity($event)"
       (rowClick)="onCityRow($event)"
@@ -96,13 +97,17 @@
             <div>
               <h2 class="sketchbook-card-title mb-1">{{ activeCategory }}</h2>
               <p class="sketchbook-city-line mb-0">
-                <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
-                {{ selectedCity }}
+                <span class="sketchbook-city-label">City</span>
+                <span class="sketchbook-city-value">
+                  <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                  {{ selectedCity }}
+                </span>
               </p>
             </div>
             <app-icon-text-button
               btn_type="add"
               placeholder="Add Entry"
+              variant="muted"
               (btnClick)="onAddEntry()"
             ></app-icon-text-button>
           </div>
@@ -132,12 +137,17 @@
           </div>
 
           <div class="sketchbook-entries">
-            @for (entry of entries; track $index) {
+            @for (entry of filteredEntries; track entry.id) {
               <app-info-card
                 [title]="entry.title"
                 [address]="entry.address"
                 [review]="entry.review"
                 [rating]="entry.rating"
+                [cityLabel]="cityLabelForEntry(entry.cityId)"
+                [activityLabel]="entry.category"
+                [activityFieldSuffix]="entry.id"
+                [allowActivityChange]="true"
+                (activityChange)="onEntryActivityChange(entry, $event)"
                 (editClick)="onEditEntry(entry)"
                 (deleteClick)="onDeleteEntry(entry)"
               ></app-info-card>

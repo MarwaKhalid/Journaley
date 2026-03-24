@@ -16,6 +16,30 @@
       </div>
     </div>
 
+    @if (cityLabel || activityLabel || allowActivityChange) {
+      <div class="info-meta d-flex flex-wrap align-items-center gap-2 mt-2">
+        @if (cityLabel) {
+          <span class="info-badge info-badge--city">{{ cityLabel }}</span>
+        }
+        @if (allowActivityChange) {
+          <label class="visually-hidden" [attr.for]="'entry-activity-' + activityFieldSuffix"
+            >Entry type</label
+          >
+          <select
+            class="info-activity-select"
+            [id]="'entry-activity-' + activityFieldSuffix"
+            (change)="onActivitySelect($event)"
+          >
+            @for (opt of activityOptions; track opt) {
+              <option [value]="opt" [selected]="opt === activityLabel">{{ opt }}</option>
+            }
+          </select>
+        } @else if (activityLabel) {
+          <span class="info-badge">{{ activityLabel }}</span>
+        }
+      </div>
+    }
+
     <div class="d-flex align-items-center gap-1 info-stars" aria-hidden="true">
       @for (n of starSlots; track n) {
         <i

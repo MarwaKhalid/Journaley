@@ -135,11 +135,33 @@ button {
 
 .sketchbook-city-line {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.5rem 0.75rem;
   color: var(--color-black);
   font-size: var(--text-xl);
   font-weight: var(--font-weight-bold);
+}
+
+.sketchbook-city-label {
+  flex: 0 0 auto;
+  color: var(--color-grey);
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sketchbook-city-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background-color: var(--color-white);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  color: var(--color-black);
+  font-size: var(--text-xl);
 }
 
 .sketchbook-filter-bar {
