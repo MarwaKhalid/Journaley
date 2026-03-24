@@ -25,7 +25,7 @@
   left: 1rem;
   z-index: 1;
   color: var(--color-black);
-  font-size: 1.125rem;
+  font-size: 0.8rem;
   pointer-events: none;
   transform: translateY(-50%);
 }
@@ -40,7 +40,7 @@
   background-color: var(--color-white);
   color: var(--color-black);
   font-family: inherit;
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
 }
 

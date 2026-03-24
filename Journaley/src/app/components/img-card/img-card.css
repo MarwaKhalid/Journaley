@@ -11,3 +11,8 @@
 .icon-btn:hover i {
   color: var(--color-red);
 }
+
+img {
+  height: 150px;
+  object-fit: cover;
+}

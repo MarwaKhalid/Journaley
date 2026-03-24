@@ -34,3 +34,7 @@
 button {
   border: none;
 }
+
+.carousel {
+  background-color: var(--color-beige);
+}
