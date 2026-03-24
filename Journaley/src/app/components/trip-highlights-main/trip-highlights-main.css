@@ -35,50 +35,44 @@
   text-align: center;
 }
 
-.thm-cards {
+.thm-photos {
   display: grid;
   margin-top: 2rem;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
+  align-items: start;
 }
 
-.thm-card {
-  display: flex;
-  flex-direction: column;
-  padding: 0.75rem 0.75rem 1rem;
-  border-radius: 10px;
+.thm-polaroid {
+  margin: 0;
+  padding: 0.65rem 0.65rem 1.75rem;
+  border-radius: 2px;
   background-color: var(--color-white);
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
 }
 
-.thm-card-img-wrap {
+.thm-polaroid-img-wrap {
   overflow: hidden;
-  border-radius: 6px;
+  background-color: var(--color-white);
 }
 
-.thm-card-img-wrap img {
+.thm-polaroid-img-wrap img {
   display: block;
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
 }
 
-.thm-card-label,
-.thm-card-value {
-  margin: 0;
+.thm-traveled-with {
+  margin: 1.75rem 0 0;
   color: var(--color-black);
+  font-size: var(--text-lg);
   font-weight: var(--font-weight-bold);
+  text-align: left;
 }
 
-.thm-card-label {
-  margin-top: 0.75rem;
-  font-size: var(--text-xl);
-}
-
-.thm-card-value {
-  margin-top: 0.25rem;
-  font-size: var(--text-md);
+.thm-traveled-with-label {
+  margin-right: 0.35rem;
 }
 
 @media (max-width: 767.98px) {
@@ -88,7 +82,7 @@
     padding-top: 2.5rem;
   }
 
-  .thm-cards {
+  .thm-photos {
     grid-template-columns: 1fr;
   }
 }

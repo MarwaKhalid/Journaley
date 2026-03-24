@@ -1,28 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconTextButton } from '../buttons/icon-text-button/icon-text-button';
 
-export interface TripHighlightCard {
+export interface TripHighlightPhoto {
   imageSrc: string;
-  label: string;
-  value: string;
+  /** Optional; defaults for accessibility when missing. */
+  alt?: string;
 }
 
-const DEFAULT_CARDS: TripHighlightCard[] = [
-  {
-    imageSrc: 'https://picsum.photos/seed/journaley-ramen/400/400',
-    label: 'Favorite Restaurant',
-    value: 'Neotokyo',
-  },
-  {
-    imageSrc: 'https://picsum.photos/seed/journaley-temple/400/400',
-    label: 'Favorite City',
-    value: 'Tokyo',
-  },
-  {
-    imageSrc: 'https://picsum.photos/seed/journaley-beach/400/400',
-    label: 'People Traveled With',
-    value: 'A, B, C',
-  },
+const DEFAULT_PHOTOS: TripHighlightPhoto[] = [
+  { imageSrc: 'https://picsum.photos/seed/journaley-ramen/400/400', alt: 'Bowl of ramen' },
+  { imageSrc: 'https://picsum.photos/seed/journaley-temple/400/400', alt: 'Pagoda at sunset' },
+  { imageSrc: 'https://picsum.photos/seed/journaley-beach/400/400', alt: 'Friends on the beach' },
 ];
 
 @Component({
@@ -35,7 +23,9 @@ export class TripHighlightsMain {
   @Input() heading = 'Trip Highlights';
   @Input() bodyText =
     'Our two-week adventure through Japan was unforgettable, from the neon-lit streets of Tokyo to the serene temples of Kyoto. The trip was perfectly timed for cherry blossom season.';
-  @Input() cards: TripHighlightCard[] = DEFAULT_CARDS;
+  @Input() photos: TripHighlightPhoto[] = DEFAULT_PHOTOS;
+  /** Comma-separated names or a single string, e.g. "A, B, C". */
+  @Input() traveledWith = 'A, B, C';
   @Output() editTrip = new EventEmitter<void>();
 
   onEdit(): void {
