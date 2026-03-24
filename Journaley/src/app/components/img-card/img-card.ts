@@ -16,7 +16,8 @@ export class ImgCard {
     return this.filename ? 'assets/images/' + this.filename : '...';
   }
 
-  onClick() {
+  onIconClick(ev: MouseEvent): void {
+    ev.stopPropagation();
     this.btnClick.emit();
   }
 }

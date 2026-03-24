@@ -17,7 +17,7 @@
         [attr.aria-current]="selectedId === item.id ? 'true' : undefined"
         (click)="onRowClick(item)"
       >
-        <span class="section-list-label">{{ item.label }}</span>
+        <span class="section-list-label" [attr.title]="item.label">{{ item.label }}</span>
         @if (item.deletable !== false) {
           <span class="section-list-actions" (click)="$event.stopPropagation()">
             <app-icon-button

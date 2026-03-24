@@ -63,9 +63,12 @@
 .section-list-label {
   min-width: 0;
   flex: 1;
+  overflow: hidden;
   color: var(--color-black);
   font-size: var(--text-xl);
   font-weight: var(--font-weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .section-list-actions {

@@ -1,5 +1,5 @@
 <nav class="navbar nav px-3">
-  <span class="navbar-brand mb-0 nav-text">Journaley</span>
+  <a routerLink="/" class="navbar-brand mb-0 nav-text nav-brand-link">Journaley</a>
   <button type="button" class="btn nav-text">Logout</button>
 </nav>
 
@@ -18,7 +18,12 @@
   <div class="trip-highlights-main-column">
     <div class="mt-5">
       <p class="title text-center mb-0">Trip highlights</p>
-      <p class="sub-title text-center">Capture what made this trip special.</p>
+      @if (countryLabel) {
+        <p class="sub-title text-center mb-0">Trips in {{ countryLabel }}</p>
+      }
+      <p class="sub-title text-center" [class.mt-1]="!!countryLabel">
+        Capture what made this trip special.
+      </p>
     </div>
 
     <div class="trip-highlights-main container-fluid px-3 px-md-4 py-4 pb-5">

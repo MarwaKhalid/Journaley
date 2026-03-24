@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 import { TripHighlights } from './trip-highlights';
 
@@ -7,8 +9,17 @@ describe('TripHighlights', () => {
   let fixture: ComponentFixture<TripHighlights>;
 
   beforeEach(async () => {
+    const paramMap$ = new BehaviorSubject(convertToParamMap({}));
+
     await TestBed.configureTestingModule({
       imports: [TripHighlights],
+      providers: [
+        provideRouter([]),
+        {
+          provide: ActivatedRoute,
+          useValue: { paramMap: paramMap$.asObservable() },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TripHighlights);

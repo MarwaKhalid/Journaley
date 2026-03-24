@@ -48,16 +48,17 @@ export class TripSketchbook {
   tripId = '';
   /** Shown under the page title when known (router state from highlights, or derived from id). */
   tripDisplayName = '';
+  /** From trip-highlights navigation state; used so Back returns to the same country filter. */
+  highlightsCountryKey = '';
 
   cityItems: SectionListItem[] = [
-    { id: 'all', label: 'All cities', deletable: false },
     { id: 'tokyo', label: 'Tokyo' },
     { id: 'osaka', label: 'Osaka' },
   ];
 
   activeCategory = 'Restaurants';
-  selectedCityId = 'all';
-  selectedCity = 'All cities';
+  selectedCityId = this.cityItems[0]?.id ?? '';
+  selectedCity = this.cityItems[0]?.label ?? '';
   searchQuery = '';
   ratingFilter = 'all';
   sortFilter = 'name-asc';
@@ -121,17 +122,40 @@ export class TripSketchbook {
     },
   ];
 
+  constructor() {
+    const route = inject(ActivatedRoute);
+    route.paramMap
+      .pipe(
+        takeUntilDestroyed(),
+        map((pm) => pm.get('tripId') ?? ''),
+      )
+      .subscribe((id) => {
+        this.tripId = id;
+        this.applyTripContextFromRoute();
+      });
+  }
+
   get isPersonalView(): boolean {
     return this.activeCategory === 'Personal';
   }
 
+  /** Target for "Back to trip" — same country highlights when we have a `countryKey` from highlights. */
+  get highlightsBackLink(): string[] {
+    return this.highlightsCountryKey
+      ? ['/trip-highlights', this.highlightsCountryKey]
+      : ['/trip-highlights'];
+  }
+
   private applyTripContextFromRoute(): void {
-    const st = history.state as { tripName?: string };
+    const st = history.state as { tripName?: string; countryKey?: string };
     if (typeof st?.tripName === 'string' && st.tripName.trim()) {
       this.tripDisplayName = st.tripName.trim();
-      return;
+    } else {
+      this.tripDisplayName = this.tripId ? this.titleCaseFromTripId(this.tripId) : '';
     }
-    this.tripDisplayName = this.tripId ? this.titleCaseFromTripId(this.tripId) : '';
+    const key = st?.countryKey;
+    this.highlightsCountryKey =
+      typeof key === 'string' && key.trim() ? key.trim().toLowerCase() : '';
   }
 
   /** Fallback label when navigation state does not include `tripName` (e.g. refresh). */
@@ -200,11 +224,15 @@ export class TripSketchbook {
 
   onDeleteCity(item: SectionListItem): void {
     this.cityItems = this.cityItems.filter((c) => c.id !== item.id);
+    if (this.selectedCityId === item.id) {
+      const next = this.cityItems[0];
+      this.selectedCityId = next?.id ?? '';
+      this.selectedCity = next?.label ?? '';
+    }
   }
 
   onAddEntry(): void {
-    const cityId =
-      this.selectedCityId === 'all' ? 'tokyo' : this.selectedCityId;
+    const cityId = this.selectedCityId || this.cityItems[0]?.id || 'tokyo';
     const tab = this.activeCategory;
     if (tab !== 'Restaurants' && tab !== 'Notes' && tab !== 'Activities') {
       return;

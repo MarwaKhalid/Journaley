@@ -1,5 +1,5 @@
 <nav class="navbar nav px-3">
-  <span class="navbar-brand mb-0 nav-text">Journaley</span>
+  <a routerLink="/" class="navbar-brand mb-0 nav-text nav-brand-link">Journaley</a>
   <button class="btn nav-text">Logout</button>
 </nav>
 
@@ -28,15 +28,28 @@
     <app-icon-text-button class="text-nowrap" placeholder="Add Entry"> </app-icon-text-button>
   </div>
   <p-carousel
-    [value]="countries()"
+    [value]="visibleCountries()"
     [numVisible]="3"
     [numScroll]="1"
     [circular]="true"
     [responsiveOptions]="responsiveOptions"
   >
     <ng-template let-country pTemplate="item">
-      <app-img-card [title]="country.name" [filename]="country.filename" [showBtn]="true">
-      </app-img-card>
+      <div
+        class="home-country-tile"
+        role="link"
+        tabindex="0"
+        (click)="openCountryTrips(country)"
+        (keydown.enter)="openCountryTrips(country)"
+        (keydown.space)="$event.preventDefault(); openCountryTrips(country)"
+      >
+        <app-img-card
+          [title]="country.name"
+          [filename]="country.filename"
+          [showBtn]="true"
+        >
+        </app-img-card>
+      </div>
     </ng-template>
   </p-carousel>
 </div>
