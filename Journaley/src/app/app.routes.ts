@@ -10,5 +10,6 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'trip-highlights', component: TripHighlights },
+  { path: 'trip-sketchbook/:tripId', component: TripSketchbook },
   { path: 'trip-sketchbook', component: TripSketchbook },
 ];

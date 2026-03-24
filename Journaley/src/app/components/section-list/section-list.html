@@ -11,7 +11,12 @@
 
   <ul class="section-list-items">
     @for (item of items; track item.id) {
-      <li class="section-list-row" (click)="onRowClick(item)">
+      <li
+        class="section-list-row"
+        [class.section-list-row--selected]="selectedId === item.id"
+        [attr.aria-current]="selectedId === item.id ? 'true' : undefined"
+        (click)="onRowClick(item)"
+      >
         <span class="section-list-label">{{ item.label }}</span>
         @if (item.deletable !== false) {
           <span class="section-list-actions" (click)="$event.stopPropagation()">
