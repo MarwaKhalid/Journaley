@@ -12,3 +12,14 @@ input:focus {
   border: 1px solid var(--color-black);
   box-shadow: none;
 }
+
+input:read-only {
+  cursor: default;
+  background-color: var(--color-white);
+  opacity: 0.92;
+}
+
+input:read-only:focus {
+  border-color: var(--color-tan);
+  box-shadow: none;
+}

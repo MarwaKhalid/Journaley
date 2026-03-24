@@ -1,0 +1,150 @@
+<nav class="navbar nav px-3">
+  <span class="navbar-brand mb-0 nav-text">Journaley</span>
+  <button type="button" class="btn nav-text">Logout</button>
+</nav>
+
+<div class="sketchbook-body">
+  <aside class="sketchbook-sidebar">
+    <app-section-list
+      title="Cities"
+      [items]="cityItems"
+      (addClick)="onAddCity()"
+      (deleteClick)="onDeleteCity($event)"
+      (rowClick)="onCityRow($event)"
+    ></app-section-list>
+  </aside>
+
+  <div class="sketchbook-main">
+    <div class="sketchbook-main-inner container-fluid py-3 pb-5">
+      <a routerLink="/trip-highlights" class="sketchbook-back">← Back to trip</a>
+
+      <div class="text-center mt-3 mb-4">
+        <h1 class="sketchbook-page-title mb-1">Trip Sketchbook</h1>
+        <p class="sketchbook-page-sub mb-0">
+          Document your journey through each city
+        </p>
+      </div>
+
+      <div class="d-flex justify-content-center mb-4">
+        <app-tab-bar (categoryChange)="onCategoryChange($event)"></app-tab-bar>
+      </div>
+
+      @if (isPersonalView) {
+        <section class="sketchbook-card sketchbook-card--personal">
+          <div class="sketchbook-card-head sketchbook-card-head--personal">
+            <h2 class="sketchbook-card-title mb-0">Personal Reflection</h2>
+            @if (reflectionEditing) {
+              <app-icon-text-button
+                btn_type="save"
+                placeholder="Save"
+                variant="muted"
+                (btnClick)="onSaveReflection()"
+              ></app-icon-text-button>
+            } @else {
+              <app-icon-text-button
+                btn_type="edit"
+                placeholder="Edit"
+                variant="muted"
+                (btnClick)="onEditReflection()"
+              ></app-icon-text-button>
+            }
+          </div>
+
+          <div class="sketchbook-reflection-inner">
+            <div class="sketchbook-reflection-fields">
+              <app-input-field
+                label="Overall feeling of the trip"
+                placeholder=""
+                id="reflection-overall"
+                [readOnly]="!reflectionEditing"
+                [(value)]="reflectionOverall"
+              ></app-input-field>
+              <app-input-field
+                label="Favorite moment"
+                placeholder=""
+                id="reflection-favorite"
+                [readOnly]="!reflectionEditing"
+                [(value)]="reflectionFavorite"
+              ></app-input-field>
+              <app-input-field
+                label="What I loved most"
+                placeholder=""
+                id="reflection-loved"
+                [readOnly]="!reflectionEditing"
+                [(value)]="reflectionLoved"
+              ></app-input-field>
+              <app-input-field
+                label="What I took away from the trip"
+                placeholder=""
+                id="reflection-takeaway"
+                [readOnly]="!reflectionEditing"
+                [(value)]="reflectionTakeaway"
+              ></app-input-field>
+              <app-input-field
+                label="Would I go back (and why)"
+                placeholder=""
+                id="reflection-goback"
+                [readOnly]="!reflectionEditing"
+                [(value)]="reflectionGoBack"
+              ></app-input-field>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <section class="sketchbook-card">
+          <div class="sketchbook-card-head">
+            <div>
+              <h2 class="sketchbook-card-title mb-1">{{ activeCategory }}</h2>
+              <p class="sketchbook-city-line mb-0">
+                <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                {{ selectedCity }}
+              </p>
+            </div>
+            <app-icon-text-button
+              btn_type="add"
+              placeholder="Add Entry"
+              (btnClick)="onAddEntry()"
+            ></app-icon-text-button>
+          </div>
+
+          <div class="sketchbook-filter-bar">
+            <app-search-field
+              id="sketchbook-search"
+              placeholder="Search by name"
+              [(value)]="searchQuery"
+            ></app-search-field>
+            <app-dropdown
+              label=""
+              id="sketchbook-rating"
+              placeholder="All Rating"
+              [options]="ratingOptions"
+              [hidePlaceholderOption]="true"
+              [(value)]="ratingFilter"
+            ></app-dropdown>
+            <app-dropdown
+              label=""
+              id="sketchbook-sort"
+              placeholder="Sort"
+              [options]="sortOptions"
+              [hidePlaceholderOption]="true"
+              [(value)]="sortFilter"
+            ></app-dropdown>
+          </div>
+
+          <div class="sketchbook-entries">
+            @for (entry of entries; track $index) {
+              <app-info-card
+                [title]="entry.title"
+                [address]="entry.address"
+                [review]="entry.review"
+                [rating]="entry.rating"
+                (editClick)="onEditEntry(entry)"
+                (deleteClick)="onDeleteEntry(entry)"
+              ></app-info-card>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+</div>

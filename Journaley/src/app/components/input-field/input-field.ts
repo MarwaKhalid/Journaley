@@ -13,5 +13,7 @@ export class InputField {
   @Input() id: string = '';
   @Input() type: string = 'text';
   @Input() value: string = '';
+  /** When true, value is visible but not editable. */
+  @Input() readOnly = false;
   @Output() valueChange = new EventEmitter<string>();
 }

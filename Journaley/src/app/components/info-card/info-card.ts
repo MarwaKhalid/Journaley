@@ -1,18 +1,19 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IconButton } from '../buttons/icon-button/icon-button';
 
 @Component({
   selector: 'app-info-card',
-  imports: [],
+  imports: [IconButton],
   templateUrl: './info-card.html',
   styleUrl: './info-card.css',
 })
 export class InfoCard {
-  @Input() title: string = '';
-  @Input() address: string = '';
-  @Input() review: string = '';
-  @Output() btnClick = new EventEmitter<void>();
+  @Input() title = '';
+  @Input() address = '';
+  @Input() review = '';
+  @Input() rating = 5;
+  @Output() editClick = new EventEmitter<void>();
+  @Output() deleteClick = new EventEmitter<void>();
 
-  onClick() {
-    this.btnClick.emit();
-  }
+  protected readonly starSlots: readonly number[] = [1, 2, 3, 4, 5];
 }

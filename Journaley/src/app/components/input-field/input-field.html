@@ -5,6 +5,7 @@
     class="form-control"
     [id]="id"
     [placeholder]="placeholder"
+    [readOnly]="readOnly"
     [(ngModel)]="value"
     (ngModelChange)="valueChange.emit($event)"
   />
