@@ -2,12 +2,14 @@
   <img class="card-img-top rounded-0" [src]="src" alt="img" />
   <div class="card-body">
     <p class="card-text text-center">{{ title }}</p>
-    <div class="d-flex align-items-center justify-content-center gap-2">
+
+    <div
+      class="d-flex align-items-center justify-content-between"
+      [style.visibility]="showBtn ? 'visible' : 'hidden'"
+    >
       <button class="btn rounded-circle icon-btn" (click)="onClick()">
         <i class="bi bi-pen"></i>
       </button>
-
-      <p class="card-text subtitle mb-0">{{ dates }}</p>
 
       <button class="btn rounded-circle icon-btn" (click)="onClick()">
         <i class="bi bi-trash3"></i>

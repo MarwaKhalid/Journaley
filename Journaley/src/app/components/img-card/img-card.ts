@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class ImgCard {
   @Input() filename: string = '';
   @Input() title: string = '';
-  @Input() dates: string = '';
+  @Input() showBtn: boolean = false;
   @Output() btnClick = new EventEmitter<void>();
 
   get src(): string {
