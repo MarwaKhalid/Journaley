@@ -11,15 +11,23 @@
     </div>
   </div>
   <p class="thm-body">{{ bodyText }}</p>
-  <div class="thm-cards">
-    @for (card of cards; track card.label) {
-      <article class="thm-card">
-        <div class="thm-card-img-wrap">
-          <img [src]="card.imageSrc" [alt]="card.label" loading="lazy" />
+  <div class="thm-photos" role="list">
+    @for (photo of photos; track photo.imageSrc) {
+      <article class="thm-polaroid" role="listitem">
+        <div class="thm-polaroid-img-wrap">
+          <img
+            [src]="photo.imageSrc"
+            [alt]="photo.alt ?? 'Trip photo'"
+            loading="lazy"
+          />
         </div>
-        <p class="thm-card-label">{{ card.label }}</p>
-        <p class="thm-card-value">{{ card.value }}</p>
       </article>
     }
   </div>
+  @if (traveledWith.trim()) {
+    <p class="thm-traveled-with">
+      <span class="thm-traveled-with-label">Traveled with:</span>
+      {{ traveledWith }}
+    </p>
+  }
 </section>
