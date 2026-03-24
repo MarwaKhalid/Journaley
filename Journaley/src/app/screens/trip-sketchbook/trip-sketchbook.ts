@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { Dropdown, DropdownOption } from '../../components/dropdown/dropdown';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
 import {
@@ -42,6 +44,11 @@ export interface SketchbookEntry {
   styleUrl: './trip-sketchbook.css',
 })
 export class TripSketchbook {
+  /** From route `/trip-sketchbook/:tripId` (empty when using `/trip-sketchbook` only). */
+  tripId = '';
+  /** Shown under the page title when known (router state from highlights, or derived from id). */
+  tripDisplayName = '';
+
   cityItems: SectionListItem[] = [
     { id: 'all', label: 'All cities', deletable: false },
     { id: 'tokyo', label: 'Tokyo' },
@@ -116,6 +123,24 @@ export class TripSketchbook {
 
   get isPersonalView(): boolean {
     return this.activeCategory === 'Personal';
+  }
+
+  private applyTripContextFromRoute(): void {
+    const st = history.state as { tripName?: string };
+    if (typeof st?.tripName === 'string' && st.tripName.trim()) {
+      this.tripDisplayName = st.tripName.trim();
+      return;
+    }
+    this.tripDisplayName = this.tripId ? this.titleCaseFromTripId(this.tripId) : '';
+  }
+
+  /** Fallback label when navigation state does not include `tripName` (e.g. refresh). */
+  private titleCaseFromTripId(id: string): string {
+    return id
+      .split(/[-_]/)
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
   }
 
   /** Entries for the current tab + city + search/rating/sort. */

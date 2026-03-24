@@ -8,8 +8,10 @@
     <app-section-list
       title="Trips"
       [items]="tripListItems"
+      [selectedId]="selectedTripId"
       (addClick)="onAddTrip()"
       (deleteClick)="onDeleteTrip($event)"
+      (rowClick)="onTripRow($event)"
     ></app-section-list>
   </aside>
 
@@ -20,7 +22,13 @@
     </div>
 
     <div class="trip-highlights-main container-fluid px-3 px-md-4 py-4 pb-5">
-      <app-trip-highlights-main (editTrip)="onEditTrip()"></app-trip-highlights-main>
+      <app-trip-highlights-main
+        [heading]="mainHeading"
+        [bodyText]="mainBodyText"
+        [photos]="mainPhotos"
+        [traveledWith]="mainTraveledWith"
+        (editTrip)="onEditTrip()"
+      ></app-trip-highlights-main>
     </div>
   </div>
 </div>

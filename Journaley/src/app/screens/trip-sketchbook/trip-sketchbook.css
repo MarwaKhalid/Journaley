@@ -74,6 +74,13 @@ button {
   font-weight: var(--font-weight-bold);
 }
 
+.sketchbook-trip-name {
+  margin: 0;
+  color: var(--color-black);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
 .sketchbook-page-sub {
   color: var(--color-grey);
   font-size: var(--text-xl);

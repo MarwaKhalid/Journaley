@@ -21,6 +21,9 @@
 
       <div class="text-center mt-3 mb-4">
         <h1 class="sketchbook-page-title mb-1">Trip Sketchbook</h1>
+        @if (tripDisplayName) {
+          <p class="sketchbook-trip-name mb-1">{{ tripDisplayName }}</p>
+        }
         <p class="sketchbook-page-sub mb-0">
           Document your journey through each city
         </p>
