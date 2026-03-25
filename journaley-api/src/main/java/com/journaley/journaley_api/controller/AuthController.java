@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.journaley.journaley_api.dto.ErrorResponseDTO;
 import com.journaley.journaley_api.dto.LoginRequestDTO;
-import com.journaley.journaley_api.dto.LoginResponse;
+import com.journaley.journaley_api.dto.LoginResponseDTO;
 import com.journaley.journaley_api.dto.RegisterRequestDTO;
 import com.journaley.journaley_api.entity.User;
 import com.journaley.journaley_api.repository.UserRepository;
@@ -59,7 +59,7 @@ public class AuthController {
         }
 
         String token = jwtService.generateToken(userDetails);
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     /**
@@ -86,7 +86,7 @@ public class AuthController {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new LoginResponse(token));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new LoginResponseDTO(token));
     }
 
     @GetMapping("/me")
