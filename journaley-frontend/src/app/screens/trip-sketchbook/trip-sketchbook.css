@@ -131,7 +131,7 @@ button {
 
 .sketchbook-reflection-inner ::ng-deep label {
   color: var(--color-black);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .sketchbook-card-head {
