@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CountryRequest {
+public class CountryRequestDTO {
     @NotBlank(message = "Country name is required")
     private String name;
 

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterRequest {
+public class RegisterRequestDTO {
 
     @NotBlank
     @Size(max = 255)

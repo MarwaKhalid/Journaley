@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CountryResponse {
+public class CountryResponseDTO {
     private Long id;
     private String name;
     private String isoCode;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static CountryResponse fromEntity(Country country) {
-        return new CountryResponse(
+    public static CountryResponseDTO fromEntity(Country country) {
+        return new CountryResponseDTO(
             country.getId(),
             country.getName(),
             country.getIsoCode(),

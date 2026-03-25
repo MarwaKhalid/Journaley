@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.journaley.journaley_api.dto.ErrorResponse;
-import com.journaley.journaley_api.dto.LoginRequest;
+import com.journaley.journaley_api.dto.ErrorResponseDTO;
+import com.journaley.journaley_api.dto.LoginRequestDTO;
 import com.journaley.journaley_api.dto.LoginResponse;
-import com.journaley.journaley_api.dto.RegisterRequest;
+import com.journaley.journaley_api.dto.RegisterRequestDTO;
 import com.journaley.journaley_api.entity.User;
 import com.journaley.journaley_api.repository.UserRepository;
 import com.journaley.journaley_api.security.JwtService;
@@ -46,16 +46,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         UserDetails userDetails;
         try {
             userDetails = userDetailsService.loadUserByUsername(request.getEmail().trim().toLowerCase());
         } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Invalid credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid credentials"));
         }
 
         if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Invalid credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDTO("Invalid credentials"));
         }
 
         String token = jwtService.generateToken(userDetails);
@@ -66,16 +66,16 @@ public class AuthController {
      * Creates a new user. Returns 409 Conflict with {@code Email already registered} if the email exists.
      */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Passwords do not match"));
+                    .body(new ErrorResponseDTO("Passwords do not match"));
         }
 
         String normalizedEmail = request.getEmail().trim().toLowerCase();
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse("Email already registered"));
+                    .body(new ErrorResponseDTO("Email already registered"));
         }
 
         User user = new User();
@@ -94,4 +94,3 @@ public class AuthController {
         return Map.of("email", userDetails.getUsername());
     }
 }
-

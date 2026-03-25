@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequest {
+public class LoginRequestDTO {
     @NotBlank
     @Email
     private String email;
@@ -15,4 +15,3 @@ public class LoginRequest {
     @NotBlank
     private String password;
 }
-

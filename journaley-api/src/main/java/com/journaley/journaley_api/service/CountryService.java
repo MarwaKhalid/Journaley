@@ -1,7 +1,7 @@
 package com.journaley.journaley_api.service;
 
-import com.journaley.journaley_api.dto.CountryRequest;
-import com.journaley.journaley_api.dto.CountryResponse;
+import com.journaley.journaley_api.dto.CountryRequestDTO;
+import com.journaley.journaley_api.dto.CountryResponseDTO;
 import com.journaley.journaley_api.entity.Country;
 import com.journaley.journaley_api.entity.User;
 import com.journaley.journaley_api.repository.CountryRepository;
@@ -20,7 +20,7 @@ public class CountryService {
         this.userRepository = userRepository;
     }
 
-    public CountryResponse addCountry(CountryRequest request, String email) {
+    public CountryResponseDTO addCountry(CountryRequestDTO request, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -30,20 +30,20 @@ public class CountryService {
         country.setIsoCode(request.getIsoCode());
 
         Country saved = countryRepository.save(country);
-        return CountryResponse.fromEntity(saved);
+        return CountryResponseDTO.fromEntity(saved);
     }
 
-    public List<CountryResponse> getAllCountriesForUser(String email) {
+    public List<CountryResponseDTO> getAllCountriesForUser(String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
         return countryRepository.findByUserId(user.getId())
             .stream()
-            .map(CountryResponse::fromEntity)
+            .map(CountryResponseDTO::fromEntity)
             .collect(Collectors.toList());
     }
 
-    public CountryResponse getCountryById(Long id, String email) {
+    public CountryResponseDTO getCountryById(Long id, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -54,10 +54,10 @@ public class CountryService {
             throw new RuntimeException("Unauthorized access");
         }
 
-        return CountryResponse.fromEntity(country);
+        return CountryResponseDTO.fromEntity(country);
     }
 
-    public CountryResponse updateCountry(Long id, CountryRequest request, String email) {
+    public CountryResponseDTO updateCountry(Long id, CountryRequestDTO request, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -72,7 +72,7 @@ public class CountryService {
         country.setIsoCode(request.getIsoCode());
 
         Country updated = countryRepository.save(country);
-        return CountryResponse.fromEntity(updated);
+        return CountryResponseDTO.fromEntity(updated);
     }
 
     public void deleteCountryById(Long id, String email) {
