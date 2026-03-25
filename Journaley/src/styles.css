@@ -43,3 +43,7 @@ body {
 .bi {
   -webkit-text-stroke: 0.5px;
 }
+
+.mat-mdc-dialog-container * {
+  font-family: 'Lobster', cursive !important;
+}
