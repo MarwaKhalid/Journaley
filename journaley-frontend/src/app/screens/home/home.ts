@@ -9,6 +9,8 @@ import { SearchField } from '../../components/search-field/search-field';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCountry } from '../../modals/create-country/create-country';
+import { DeleteCountry } from '../../modals/delete-country/delete-country';
+import { EditCountry } from '../../modals/edit-country/edit-country';
 
 interface Country {
   name: string;
@@ -41,8 +43,51 @@ export class Home implements OnInit {
     const dialogRef = this.dialog.open(CreateCountry);
 
     dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.name) {
+        let filename = 'default.png';
+
+        if (result.file) {
+          filename = `${result.name}.${result.file.name.split('.').pop()}`;
+        }
+
+        this.countries.update((current) => [
+          ...current,
+          {
+            name: result.name,
+            filename: filename,
+            slug: result.name.toLowerCase().replace(/\s+/g, '-'),
+          },
+        ]);
+      }
+    });
+  }
+
+  openEditCountryDialog(country: Country) {
+    const dialogRef = this.dialog.open(EditCountry, {
+      data: country,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('New country created:', result);
+        this.countries.update((current) =>
+          current.map((c) =>
+            c.name === country.name
+              ? { ...c, name: result, slug: result.toLowerCase().replace(/\s+/g, '-') }
+              : c,
+          ),
+        );
+      }
+    });
+  }
+
+  openDeleteCountryDialog(country: Country) {
+    const dialogRef = this.dialog.open(DeleteCountry, {
+      data: country,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.countries.update((current) => current.filter((c) => c.name !== country.name));
       }
     });
   }

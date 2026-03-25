@@ -7,19 +7,11 @@
       class="d-flex align-items-center justify-content-between"
       [style.visibility]="showBtn ? 'visible' : 'hidden'"
     >
-      <button
-        type="button"
-        class="btn rounded-circle icon-btn"
-        (click)="onIconClick($event)"
-      >
+      <button type="button" class="btn rounded-circle icon-btn" (click)="onEditClick($event)">
         <i class="bi bi-pen"></i>
       </button>
 
-      <button
-        type="button"
-        class="btn rounded-circle icon-btn"
-        (click)="onIconClick($event)"
-      >
+      <button type="button" class="btn rounded-circle icon-btn" (click)="onTrashClick($event)">
         <i class="bi bi-trash3"></i>
       </button>
     </div>

@@ -10,14 +10,20 @@ export class ImgCard {
   @Input() filename: string = '';
   @Input() title: string = '';
   @Input() showBtn: boolean = false;
-  @Output() btnClick = new EventEmitter<void>();
+  @Output() editClick = new EventEmitter<void>(); // Separate event for edit
+  @Output() deleteClick = new EventEmitter<void>(); // Separate event for delete
 
   get src(): string {
     return this.filename ? 'assets/images/' + this.filename : '...';
   }
 
-  onIconClick(ev: MouseEvent): void {
+  onEditClick(ev: MouseEvent): void {
     ev.stopPropagation();
-    this.btnClick.emit();
+    this.editClick.emit();
+  }
+
+  onTrashClick(ev: MouseEvent): void {
+    ev.stopPropagation();
+    this.deleteClick.emit();
   }
 }

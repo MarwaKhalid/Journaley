@@ -14,8 +14,16 @@ import { TextButton } from '../../components/buttons/text-button/text-button';
 export class CreateCountry {
   countryName: string = '';
   readonly dialogRef = inject(MatDialogRef<CreateCountry>);
+  imageFile: File | null = null;
+
+  onImageChange(file: File | null) {
+    this.imageFile = file;
+  }
 
   onSubmit() {
-    this.dialogRef.close(this.countryName);
+    this.dialogRef.close({
+      name: this.countryName,
+      file: this.imageFile,
+    });
   }
 }

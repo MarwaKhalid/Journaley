@@ -1,4 +1,4 @@
-<h2 class="modal-title text-center" mat-dialog-title>Create Country</h2>
+<h2 class="modal-title text-center" mat-dialog-title>Edit Country</h2>
 <mat-dialog-content class="mat-typography">
   <app-input-field
     label="Country"
@@ -7,14 +7,10 @@
     [(value)]="countryName"
   ></app-input-field>
   <div class="mb-3"></div>
-  <app-upload-image-field (fileChange)="onImageChange($event)"></app-upload-image-field>
+  <app-upload-image-field></app-upload-image-field>
 </mat-dialog-content>
 <div class="mt-3"></div>
 <mat-dialog-actions>
   <app-text-button mat-dialog-close btn_type="cancel" placeholder="Cancel"></app-text-button>
-  <app-text-button
-    btn_type="submit"
-    placeholder="Add Country"
-    (btnClick)="onSubmit()"
-  ></app-text-button>
+  <app-text-button btn_type="submit" placeholder="Update" (btnClick)="onSubmit()"></app-text-button>
 </mat-dialog-actions>
