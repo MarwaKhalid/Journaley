@@ -19,7 +19,7 @@
   margin: 0;
   color: var(--color-black);
   font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .section-list-header app-icon-button {
@@ -65,8 +65,8 @@
   flex: 1;
   overflow: hidden;
   color: var(--color-black);
-  font-size: var(--text-xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--text-md);
+  /* font-weight: var(--font-weight-bold); */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
