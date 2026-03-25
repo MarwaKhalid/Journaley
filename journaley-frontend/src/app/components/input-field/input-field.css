@@ -1,6 +1,7 @@
 label,
 input {
   font-size: var(--text-sm);
+  color: var(--color-black);
 }
 
 input::placeholder {

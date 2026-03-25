@@ -7,6 +7,8 @@ import { TagModule } from 'primeng/tag';
 import { ImgCard } from '../../components/img-card/img-card';
 import { SearchField } from '../../components/search-field/search-field';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateCountry } from '../../modals/create-country/create-country';
 
 interface Country {
   name: string;
@@ -33,6 +35,17 @@ interface Country {
 })
 export class Home implements OnInit {
   private readonly router = inject(Router);
+  readonly dialog = inject(MatDialog);
+
+  openCreateCountryDialog() {
+    const dialogRef = this.dialog.open(CreateCountry);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('New country created:', result);
+      }
+    });
+  }
 
   searchQuery = '';
   countries = signal<Country[]>([]);

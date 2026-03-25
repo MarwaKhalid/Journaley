@@ -1,0 +1,13 @@
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--color-beige) !important;
+}
+
+mat-dialog-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+mat-dialog-actions app-text-button {
+  flex: 1;
+}

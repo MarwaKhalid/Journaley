@@ -25,7 +25,12 @@
       placeholder="Search by name"
       [(value)]="searchQuery"
     ></app-search-field>
-    <app-icon-text-button class="text-nowrap" placeholder="Add Entry"> </app-icon-text-button>
+    <app-icon-text-button
+      class="text-nowrap"
+      placeholder="Add Country"
+      (click)="openCreateCountryDialog()"
+    >
+    </app-icon-text-button>
   </div>
   <p-carousel
     [value]="visibleCountries()"
@@ -43,11 +48,7 @@
         (keydown.enter)="openCountryTrips(country)"
         (keydown.space)="$event.preventDefault(); openCountryTrips(country)"
       >
-        <app-img-card
-          [title]="country.name"
-          [filename]="country.filename"
-          [showBtn]="true"
-        >
+        <app-img-card [title]="country.name" [filename]="country.filename" [showBtn]="true">
         </app-img-card>
       </div>
     </ng-template>
