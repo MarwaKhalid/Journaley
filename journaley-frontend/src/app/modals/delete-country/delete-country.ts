@@ -1,13 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputField } from '../../components/input-field/input-field';
-import { UploadImageField } from '../../components/upload-image-field/upload-image-field';
 import { TextButton } from '../../components/buttons/text-button/text-button';
 
 @Component({
   selector: 'app-delete-country',
-  imports: [MatDialogModule, MatButtonModule, InputField, UploadImageField, TextButton],
+  imports: [MatDialogModule, MatButtonModule, TextButton],
   templateUrl: './delete-country.html',
   styleUrl: './delete-country.css',
 })
