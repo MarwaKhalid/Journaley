@@ -1,6 +1,12 @@
 <h2 class="modal-title text-center" mat-dialog-title>Edit Entry</h2>
 <mat-dialog-content class="mat-typography">
-  <app-dropdown label="City" [options]="cityOptions" [(value)]="selectedCityId"> </app-dropdown>
+  <app-dropdown
+    label="City"
+    [hidePlaceholderOption]="true"
+    [options]="cityOptions"
+    [(value)]="selectedCityId"
+  >
+  </app-dropdown>
   <div class="mb-3"></div>
   <app-input-field
     label="Name"
