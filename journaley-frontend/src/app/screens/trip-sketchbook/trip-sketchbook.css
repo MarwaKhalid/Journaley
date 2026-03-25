@@ -68,8 +68,8 @@ button {
 .sketchbook-back {
   display: inline-block;
   color: var(--color-black);
-  font-size: var(--text-xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--text-md);
+  /* font-weight: var(--font-weight-bold); */
   text-decoration: none;
 }
 
@@ -80,15 +80,15 @@ button {
 
 .sketchbook-page-title {
   color: var(--color-black);
-  font-size: var(--text-3xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--text-2xl);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .sketchbook-trip-name {
   margin: 0;
   color: var(--color-black);
   font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .sketchbook-page-sub {
@@ -146,8 +146,8 @@ button {
 .sketchbook-card-title {
   margin: 0;
   color: var(--color-black);
-  font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--text-xl);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .sketchbook-city-line {
@@ -178,7 +178,7 @@ button {
   background-color: var(--color-white);
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   color: var(--color-black);
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
 }
 
 .sketchbook-filter-bar {

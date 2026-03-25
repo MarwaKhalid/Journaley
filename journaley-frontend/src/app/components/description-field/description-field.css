@@ -10,8 +10,8 @@
   width: 100%;
   margin-bottom: 0;
   color: var(--color-black);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-xl);
+  /* font-weight: var(--font-weight-bold); */
+  font-size: var(--text-sm);
 }
 
 .description-textarea {
@@ -24,7 +24,7 @@
   background-color: var(--color-white);
   color: var(--color-black);
   font-family: inherit;
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
   font-weight: var(--font-weight-normal);
   resize: vertical;
   box-sizing: border-box;
