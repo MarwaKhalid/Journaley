@@ -1,16 +1,8 @@
 package com.journaley.journaley_api.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,22 +15,20 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pk")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "country_id", nullable = false)
-    private Integer countryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "start_date")
-    private LocalDate startDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
-
-    @Column(name = "summary")
+    @Column(name = "summary", nullable = false)
     private String summary;
+
+    @Column(name = "people")
+    private String people;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
