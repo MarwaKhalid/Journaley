@@ -9,8 +9,8 @@
       title="Trips"
       [items]="tripListItems"
       [selectedId]="selectedTripId"
-      (addClick)="onAddTrip()"
-      (deleteClick)="onDeleteTrip($event)"
+      (addClick)="openCreateTripDialog()"
+      (deleteClick)="openDeleteTripDialog($event)"
       (rowClick)="onTripRow($event)"
     ></app-section-list>
   </aside>

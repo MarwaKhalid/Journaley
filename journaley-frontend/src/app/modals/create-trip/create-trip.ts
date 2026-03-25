@@ -1,29 +1,56 @@
+// create-trip.ts
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { InputField } from '../../components/input-field/input-field';
-import { UploadImageField } from '../../components/upload-image-field/upload-image-field';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TextButton } from '../../components/buttons/text-button/text-button';
+import { InputField } from '../../components/input-field/input-field';
 import { DescriptionField } from '../../components/description-field/description-field';
+import { UploadImageField } from '../../components/upload-image-field/upload-image-field';
 
 @Component({
   selector: 'app-create-trip',
   imports: [
     MatDialogModule,
     MatButtonModule,
-    InputField,
-    UploadImageField,
-    DescriptionField,
     TextButton,
+    InputField,
+    DescriptionField,
+    UploadImageField,
   ],
   templateUrl: './create-trip.html',
   styleUrl: './create-trip.css',
 })
 export class CreateTrip {
-  tripName: string = '';
+  readonly data = inject(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<CreateTrip>);
 
+  tripName: string = '';
+  tripPeople: string = '';
+  image1: File | null = null;
+  image2: File | null = null;
+  image3: File | null = null;
+
+  onImage1Change(file: File | null) {
+    this.image1 = file;
+  }
+
+  onImage2Change(file: File | null) {
+    this.image2 = file;
+  }
+
+  onImage3Change(file: File | null) {
+    this.image3 = file;
+  }
+
   onSubmit() {
-    this.dialogRef.close(this.tripName);
+    if (!this.tripName.trim()) return;
+
+    this.dialogRef.close({
+      name: this.tripName,
+      bodyText: '', // You don't have this field in your form
+      traveledWith: this.tripPeople,
+      photos: [], // You'll need to handle image uploads
+      countryKey: this.data?.countryKey,
+    });
   }
 }

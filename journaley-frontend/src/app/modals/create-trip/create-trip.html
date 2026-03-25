@@ -7,13 +7,20 @@
     [(value)]="tripName"
   ></app-input-field>
   <div class="mb-3"></div>
-  <app-description-field label="People Traveled With" placeholder="Names"></app-description-field>
+  <app-description-field
+    label="People Traveled With"
+    placeholder="Names"
+    [(value)]="tripPeople"
+  ></app-description-field>
   <div class="mb-3"></div>
-  <app-upload-image-field></app-upload-image-field>
+  <app-upload-image-field label="Upload Image 1" (fileChange)="onImage1Change($event)">
+  </app-upload-image-field>
   <div class="mb-3"></div>
-  <app-upload-image-field></app-upload-image-field>
+  <app-upload-image-field label="Upload Image 2" (fileChange)="onImage2Change($event)">
+  </app-upload-image-field>
   <div class="mb-3"></div>
-  <app-upload-image-field></app-upload-image-field>
+  <app-upload-image-field label="Upload Image 3" (fileChange)="onImage3Change($event)">
+  </app-upload-image-field>
 </mat-dialog-content>
 <div class="mt-3"></div>
 <mat-dialog-actions>

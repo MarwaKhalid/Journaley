@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -6,10 +6,10 @@ import {
   TripHighlightPhoto,
   TripHighlightsMain,
 } from '../../components/trip-highlights-main/trip-highlights-main';
-import {
-  SectionList,
-  SectionListItem,
-} from '../../components/section-list/section-list';
+import { SectionList, SectionListItem } from '../../components/section-list/section-list';
+import { DeleteTrip } from '../../modals/delete-trip/delete-trip';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateTrip } from '../../modals/create-trip/create-trip';
 
 const JAPAN_PHOTOS: TripHighlightPhoto[] = [
   { imageSrc: 'https://picsum.photos/seed/journaley-ramen/400/400', alt: 'Bowl of ramen' },
@@ -56,6 +56,8 @@ export interface TripRecord {
 export class TripHighlights {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  readonly dialog = inject(MatDialog);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   /** From URL `trip-highlights/:countryKey`; empty = all countries. */
   countryKey = '';
@@ -269,6 +271,56 @@ export class TripHighlights {
     if (this.selectedTripId === item.id) {
       this.selectedTripId = this.trips[0]?.id ?? '';
     }
+  }
+
+  openCreateTripDialog() {
+    const dialogRef = this.dialog.open(CreateTrip, {
+      data: { countryKey: this.countryKey },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.name) {
+        // Wrap in setTimeout to avoid change detection error
+        setTimeout(() => {
+          const id = TripHighlights.newTripId();
+          const keyForNew = this.countryKey || result.countryKey || 'other';
+
+          this.allTrips = [
+            ...this.allTrips,
+            {
+              id,
+              countryKey: keyForNew,
+              name: result.name,
+              heading: result.name,
+              bodyText: result.bodyText || 'Add a description for this trip.',
+              photos: result.photos || [],
+              traveledWith: result.traveledWith || '',
+            },
+          ];
+          this.selectedTripId = id;
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  openDeleteTripDialog(item: SectionListItem) {
+    const trip = this.allTrips.find((t) => t.id === item.id);
+    if (!trip) return;
+
+    const dialogRef = this.dialog.open(DeleteTrip, {
+      data: trip,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        setTimeout(() => {
+          this.allTrips = this.allTrips.filter((t) => t.id !== item.id);
+          this.syncSelectionToFilteredTrips();
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
   }
 
   onEditTrip(): void {
