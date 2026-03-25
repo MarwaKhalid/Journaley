@@ -11,8 +11,8 @@ import lombok.Setter;
 /**
  * API country row for the home carousel.
  *
- * <p>{@code imageFilename} — for phase 1 we always return {@code default.png} until upload/persistence
- * for country cover images exists; the Angular {@code ImgCard} resolves it under {@code assets/images/}.
+ * <p>{@code imageUrl} — browser-loadable URL when a cover image exists; {@code null} otherwise
+ * (frontend may show a placeholder).
  */
 @Getter
 @Setter
@@ -23,20 +23,18 @@ public class CountryResponseDTO {
     private String isoCode;
     /** Stable route key, unique per user. */
     private String slug;
-    /** File name under {@code assets/images/} (placeholder until real uploads). */
-    private String imageFilename;
+    /** Full URL to the cover image, or null. */
+    private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private static final String PLACEHOLDER_IMAGE = "default.png";
-
-    public static CountryResponseDTO fromEntity(Country country) {
+    public static CountryResponseDTO fromEntity(Country country, String imageUrl) {
         return new CountryResponseDTO(
                 country.getId(),
                 country.getName(),
                 country.getIsoCode(),
                 country.getSlug(),
-                PLACEHOLDER_IMAGE,
+                imageUrl,
                 country.getCreatedAt(),
                 country.getUpdatedAt());
     }

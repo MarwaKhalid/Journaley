@@ -2,6 +2,7 @@
 export interface Country {
   id: number;
   name: string;
-  filename: string;
   slug: string;
+  /** Full URL from API when a cover image exists. */
+  imageUrl: string | null;
 }

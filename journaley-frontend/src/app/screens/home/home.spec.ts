@@ -36,7 +36,7 @@ describe('Home', () => {
         name: 'Japan',
         isoCode: null,
         slug: 'japan',
-        imageFilename: 'default.png',
+        imageUrl: 'http://localhost:8080/api/files/country-images/x.jpg',
         createdAt: '2025-01-01T00:00:00',
         updatedAt: '2025-01-01T00:00:00',
       },
@@ -44,6 +44,7 @@ describe('Home', () => {
     await fixture.whenStable();
     expect(component.countries().length).toBe(1);
     expect(component.countries()[0].slug).toBe('japan');
+    expect(component.countries()[0].imageUrl).toContain('/api/files/country-images/');
     httpMock.verify();
   });
 });

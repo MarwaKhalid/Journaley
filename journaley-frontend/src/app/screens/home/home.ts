@@ -13,7 +13,7 @@ import { API_BASE_URL } from '../../core/api.config';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCountry } from '../../modals/create-country/create-country';
 import { DeleteCountry } from '../../modals/delete-country/delete-country';
-import { EditCountry } from '../../modals/edit-country/edit-country';
+import { EditCountry, EditCountryResult } from '../../modals/edit-country/edit-country';
 import type { Country } from '../../models/country.model';
 
 /** Country row from GET /api/countries */
@@ -22,7 +22,7 @@ interface CountryApiDto {
   name: string;
   isoCode: string | null;
   slug: string;
-  imageFilename: string;
+  imageUrl: string | null;
 }
 
 @Component({
@@ -60,8 +60,17 @@ export class Home implements OnInit {
         return;
       }
       const name = result.name.trim();
+      const file = result.file ?? null;
       this.http.post<CountryApiDto>(`${API_BASE_URL}/api/countries`, { name }).subscribe({
-        next: () => this.loadCountries(),
+        next: (created) => {
+          if (file) {
+            this.postCountryImage(created.id, file, () => this.loadCountries(), (err) =>
+              this.setHttpError(err, 'Country created but image upload failed.'),
+            );
+          } else {
+            this.loadCountries();
+          }
+        },
         error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not create country.'),
       });
     });
@@ -72,16 +81,22 @@ export class Home implements OnInit {
       data: country,
     });
 
-    dialogRef.afterClosed().subscribe((result: string | undefined) => {
-      if (result === undefined || result === null) {
+    dialogRef.afterClosed().subscribe((result: EditCountryResult | undefined) => {
+      if (!result?.name?.trim()) {
         return;
       }
-      const name = String(result).trim();
-      if (!name) {
-        return;
-      }
+      const name = result.name.trim();
+      const file = result.file ?? null;
       this.http.put<CountryApiDto>(`${API_BASE_URL}/api/countries/${country.id}`, { name }).subscribe({
-        next: () => this.loadCountries(),
+        next: () => {
+          if (file) {
+            this.postCountryImage(country.id, file, () => this.loadCountries(), (err) =>
+              this.setHttpError(err, 'Country updated but image upload failed.'),
+            );
+          } else {
+            this.loadCountries();
+          }
+        },
         error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not update country.'),
       });
     });
@@ -135,11 +150,25 @@ export class Home implements OnInit {
           rows.map((d) => ({
             id: d.id,
             name: d.name,
-            filename: d.imageFilename || 'default.png',
             slug: d.slug,
+            imageUrl: d.imageUrl ?? null,
           })),
         ),
       error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not load countries.'),
+    });
+  }
+
+  private postCountryImage(
+    countryId: number,
+    file: File,
+    onSuccess: () => void,
+    onError: (err: HttpErrorResponse) => void,
+  ): void {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    this.http.post<void>(`${API_BASE_URL}/api/countries/${countryId}/image`, formData).subscribe({
+      next: () => onSuccess(),
+      error: (err: HttpErrorResponse) => onError(err),
     });
   }
 

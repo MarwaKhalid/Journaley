@@ -6,6 +6,11 @@ import { UploadImageField } from '../../components/upload-image-field/upload-ima
 import { TextButton } from '../../components/buttons/text-button/text-button';
 import type { Country } from '../../models/country.model';
 
+export interface EditCountryResult {
+  name: string;
+  file?: File | null;
+}
+
 @Component({
   selector: 'app-edit-country',
   imports: [MatDialogModule, MatButtonModule, InputField, UploadImageField, TextButton],
@@ -14,11 +19,19 @@ import type { Country } from '../../models/country.model';
 })
 export class EditCountry {
   readonly data = inject<Country>(MAT_DIALOG_DATA);
-  readonly dialogRef = inject(MatDialogRef<EditCountry>);
+  readonly dialogRef = inject(MatDialogRef<EditCountry, EditCountryResult>);
 
   countryName: string = this.data.name;
+  imageFile: File | null = null;
+
+  onImageChange(file: File | null) {
+    this.imageFile = file;
+  }
 
   onSubmit() {
-    this.dialogRef.close(this.countryName);
+    this.dialogRef.close({
+      name: this.countryName,
+      file: this.imageFile,
+    });
   }
 }
