@@ -1,20 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Dropdown, DropdownOption } from '../../components/dropdown/dropdown';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
-import {
-  InfoCard,
-  SketchbookEntryActivity,
-} from '../../components/info-card/info-card';
-import {
-  SectionList,
-  SectionListItem,
-} from '../../components/section-list/section-list';
+import { InfoCard, SketchbookEntryActivity } from '../../components/info-card/info-card';
+import { SectionList, SectionListItem } from '../../components/section-list/section-list';
 import { InputField } from '../../components/input-field/input-field';
 import { SearchField } from '../../components/search-field/search-field';
 import { TabBar } from '../../components/tab-bar/tab-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateCity } from '../../modals/create-city/create-city';
+import { DeleteCity } from '../../modals/delete-city/delete-city';
 
 export interface SketchbookEntry {
   id: string;
@@ -50,6 +47,8 @@ export class TripSketchbook {
   tripDisplayName = '';
   /** From trip-highlights navigation state; used so Back returns to the same country filter. */
   highlightsCountryKey = '';
+  private readonly cdr = inject(ChangeDetectorRef);
+  readonly dialog = inject(MatDialog);
 
   cityItems: SectionListItem[] = [
     { id: 'tokyo', label: 'Tokyo' },
@@ -252,10 +251,7 @@ export class TripSketchbook {
     this.entries = [...this.entries, next];
   }
 
-  onEntryActivityChange(
-    entry: SketchbookEntry,
-    category: SketchbookEntryActivity,
-  ): void {
+  onEntryActivityChange(entry: SketchbookEntry, category: SketchbookEntryActivity): void {
     entry.category = category;
   }
 
@@ -280,5 +276,42 @@ export class TripSketchbook {
 
   onDeleteEntry(entry: SketchbookEntry): void {
     this.entries = this.entries.filter((e) => e !== entry);
+  }
+
+  openCreateCityDialog() {
+    const dialogRef = this.dialog.open(CreateCity);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.name) {
+        setTimeout(() => {
+          const id = result.name.toLowerCase().replace(/\s+/g, '-');
+          this.cityItems = [...this.cityItems, { id, label: result.name }];
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  openDeleteCityDialog(item: SectionListItem) {
+    const city = this.cityItems.find((c) => c.id === item.id);
+    if (!city) return;
+
+    const dialogRef = this.dialog.open(DeleteCity, {
+      data: city,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        setTimeout(() => {
+          this.cityItems = this.cityItems.filter((c) => c.id !== item.id);
+          if (this.selectedCityId === item.id) {
+            const next = this.cityItems[0];
+            this.selectedCityId = next?.id ?? '';
+            this.selectedCity = next?.label ?? '';
+          }
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
   }
 }

@@ -9,8 +9,8 @@
       title="Cities"
       [items]="cityItems"
       [selectedId]="selectedCityId"
-      (addClick)="onAddCity()"
-      (deleteClick)="onDeleteCity($event)"
+      (addClick)="openCreateCityDialog()"
+      (deleteClick)="openDeleteCityDialog($event)"
       (rowClick)="onCityRow($event)"
     ></app-section-list>
   </aside>
