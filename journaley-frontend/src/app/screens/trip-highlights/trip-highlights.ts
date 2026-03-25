@@ -10,6 +10,7 @@ import { SectionList, SectionListItem } from '../../components/section-list/sect
 import { DeleteTrip } from '../../modals/delete-trip/delete-trip';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTrip } from '../../modals/create-trip/create-trip';
+import { AuthService } from '../../core/auth.service';
 
 const JAPAN_PHOTOS: TripHighlightPhoto[] = [
   { imageSrc: 'https://picsum.photos/seed/journaley-ramen/400/400', alt: 'Bowl of ramen' },
@@ -56,8 +57,14 @@ export interface TripRecord {
 export class TripHighlights {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly auth = inject(AuthService);
   readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  logout(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login');
+  }
 
   /** From URL `trip-highlights/:countryKey`; empty = all countries. */
   countryKey = '';

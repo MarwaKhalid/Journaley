@@ -4,7 +4,11 @@
       <p class="card-text title mb-0">Register</p>
       <p class="card-text sub-text">Create your Journaley account</p>
 
-      <form>
+      <form (ngSubmit)="onSubmit()">
+        <button type="submit" class="visually-hidden" tabindex="-1">Submit</button>
+        @if (errorMessage) {
+          <div class="alert alert-danger py-2 small" role="alert">{{ errorMessage }}</div>
+        }
         <div class="mb-3">
           <app-input-field
             label="Name"
@@ -36,20 +40,20 @@
             placeholder="Password"
             id="register-confirm-pass"
             type="password"
-            [(value)]="confirm_password"
+            [(value)]="confirmPassword"
           ></app-input-field>
         </div>
         <div class="mt-2">
           <app-text-button
             btn_type="submit"
             placeholder="Register"
-            (btnClick)="onClick()"
+            (btnClick)="onSubmit()"
           ></app-text-button>
         </div>
       </form>
 
       <p class="card-text sub-text text-center mt-2">
-        Already have an account? <a href="login">Login</a>
+        Already have an account? <a routerLink="/login">Login</a>
       </p>
     </div>
   </div>

@@ -4,7 +4,11 @@
       <p class="card-text title mb-0">Login</p>
       <p class="card-text sub-text">Welcome back to Journaley</p>
 
-      <form>
+      <form (ngSubmit)="onSubmit()">
+        <button type="submit" class="visually-hidden" tabindex="-1">Submit</button>
+        @if (errorMessage) {
+          <div class="alert alert-danger py-2 small" role="alert">{{ errorMessage }}</div>
+        }
         <div class="mb-3">
           <app-input-field
             label="Email"
@@ -26,13 +30,13 @@
           <app-text-button
             btn_type="submit"
             placeholder="Login"
-            (btnClick)="onClick()"
+            (btnClick)="onSubmit()"
           ></app-text-button>
         </div>
       </form>
 
       <p class="card-text sub-text text-center mt-2">
-        Don't have an account? <a href="register">Register</a>
+        Don't have an account? <a routerLink="/register">Register</a>
       </p>
     </div>
   </div>
