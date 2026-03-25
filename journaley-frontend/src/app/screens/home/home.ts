@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
@@ -8,16 +9,20 @@ import { ImgCard } from '../../components/img-card/img-card';
 import { SearchField } from '../../components/search-field/search-field';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
 import { AuthService } from '../../core/auth.service';
+import { API_BASE_URL } from '../../core/api.config';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCountry } from '../../modals/create-country/create-country';
 import { DeleteCountry } from '../../modals/delete-country/delete-country';
 import { EditCountry } from '../../modals/edit-country/edit-country';
+import type { Country } from '../../models/country.model';
 
-interface Country {
+/** Country row from GET /api/countries */
+interface CountryApiDto {
+  id: number;
   name: string;
-  filename: string;
-  /** URL segment for `/trip-highlights/:countryKey`. */
+  isoCode: string | null;
   slug: string;
+  imageFilename: string;
 }
 
 @Component({
@@ -39,6 +44,7 @@ interface Country {
 export class Home implements OnInit {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
+  private readonly http = inject(HttpClient);
   readonly dialog = inject(MatDialog);
 
   logout(): void {
@@ -49,23 +55,15 @@ export class Home implements OnInit {
   openCreateCountryDialog() {
     const dialogRef = this.dialog.open(CreateCountry);
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result && result.name) {
-        let filename = 'default.png';
-
-        if (result.file) {
-          filename = `${result.name}.${result.file.name.split('.').pop()}`;
-        }
-
-        this.countries.update((current) => [
-          ...current,
-          {
-            name: result.name,
-            filename: filename,
-            slug: result.name.toLowerCase().replace(/\s+/g, '-'),
-          },
-        ]);
+    dialogRef.afterClosed().subscribe((result: { name: string; file?: File | null } | undefined) => {
+      if (!result?.name?.trim()) {
+        return;
       }
+      const name = result.name.trim();
+      this.http.post<CountryApiDto>(`${API_BASE_URL}/api/countries`, { name }).subscribe({
+        next: () => this.loadCountries(),
+        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not create country.'),
+      });
     });
   }
 
@@ -74,16 +72,18 @@ export class Home implements OnInit {
       data: country,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.countries.update((current) =>
-          current.map((c) =>
-            c.name === country.name
-              ? { ...c, name: result, slug: result.toLowerCase().replace(/\s+/g, '-') }
-              : c,
-          ),
-        );
+    dialogRef.afterClosed().subscribe((result: string | undefined) => {
+      if (result === undefined || result === null) {
+        return;
       }
+      const name = String(result).trim();
+      if (!name) {
+        return;
+      }
+      this.http.put<CountryApiDto>(`${API_BASE_URL}/api/countries/${country.id}`, { name }).subscribe({
+        next: () => this.loadCountries(),
+        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not update country.'),
+      });
     });
   }
 
@@ -92,16 +92,21 @@ export class Home implements OnInit {
       data: country,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.countries.update((current) => current.filter((c) => c.name !== country.name));
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) {
+        return;
       }
+      this.http.delete<void>(`${API_BASE_URL}/api/countries/${country.id}`).subscribe({
+        next: () => this.loadCountries(),
+        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not delete country.'),
+      });
     });
   }
 
   searchQuery = '';
   countries = signal<Country[]>([]);
-  /** Countries shown in the carousel after search. */
+  countriesError = signal('');
+
   visibleCountries = computed(() => {
     const q = this.searchQuery.trim().toLowerCase();
     const all = this.countries();
@@ -110,22 +115,37 @@ export class Home implements OnInit {
     }
     return all.filter((c) => c.name.toLowerCase().includes(q));
   });
-  responsiveOptions: any[] = [];
+  responsiveOptions: { breakpoint: string; numVisible: number; numScroll: number }[] = [];
 
   ngOnInit() {
-    this.countries.set([
-      { name: 'Japan', filename: 'Japan.png', slug: 'japan' },
-      { name: 'USA', filename: 'USA.png', slug: 'usa' },
-      { name: 'Italy', filename: 'Italy.png', slug: 'italy' },
-      { name: 'Brazil', filename: 'Brazil.png', slug: 'brazil' },
-      { name: 'France', filename: 'France.png', slug: 'france' },
-    ]);
     this.responsiveOptions = [
       { breakpoint: '1400px', numVisible: 3, numScroll: 1 },
       { breakpoint: '1199px', numVisible: 2, numScroll: 1 },
       { breakpoint: '767px', numVisible: 1, numScroll: 1 },
       { breakpoint: '575px', numVisible: 1, numScroll: 1 },
     ];
+    this.loadCountries();
+  }
+
+  loadCountries(): void {
+    this.countriesError.set('');
+    this.http.get<CountryApiDto[]>(`${API_BASE_URL}/api/countries`).subscribe({
+      next: (rows) =>
+        this.countries.set(
+          rows.map((d) => ({
+            id: d.id,
+            name: d.name,
+            filename: d.imageFilename || 'default.png',
+            slug: d.slug,
+          })),
+        ),
+      error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not load countries.'),
+    });
+  }
+
+  private setHttpError(err: HttpErrorResponse, fallback: string): void {
+    const body = err.error as { error?: string; message?: string } | null;
+    this.countriesError.set(body?.error ?? body?.message ?? err.message ?? fallback);
   }
 
   openCountryTrips(country: Country): void {

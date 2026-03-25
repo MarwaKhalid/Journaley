@@ -1,6 +1,7 @@
 package com.journaley.journaley_api.security;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class JournaleyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String email = username;
+        String email = username == null ? "" : username.trim().toLowerCase(Locale.ROOT);
 
         User user = userRepository
                 .findByEmail(email)

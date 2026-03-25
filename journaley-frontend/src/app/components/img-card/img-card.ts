@@ -14,7 +14,11 @@ export class ImgCard {
   @Output() deleteClick = new EventEmitter<void>(); // Separate event for delete
 
   get src(): string {
-    return this.filename ? 'assets/images/' + this.filename : '...';
+    if (!this.filename || this.filename === 'default.png') {
+      const seed = encodeURIComponent((this.title || 'place').toLowerCase().replace(/\s+/g, '-'));
+      return `https://picsum.photos/seed/journaley-${seed}/400/300`;
+    }
+    return 'assets/images/' + this.filename;
   }
 
   onEditClick(ev: MouseEvent): void {

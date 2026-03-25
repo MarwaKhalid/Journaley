@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/countries/{countryId}/trips")
+@RequestMapping("/api/countries/{countryId}/trips")
 public class TripController {
     private final TripService tripService;
 

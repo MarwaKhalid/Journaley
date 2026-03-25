@@ -9,6 +9,9 @@
 </div>
 
 <div class="carousel p-3">
+  @if (countriesError()) {
+    <div class="alert alert-warning py-2 small mb-3" role="alert">{{ countriesError() }}</div>
+  }
   <div class="d-flex justify-content-between align-items-center gap-2 mb-3 home-btns">
     <app-search-field
       id="country-search"

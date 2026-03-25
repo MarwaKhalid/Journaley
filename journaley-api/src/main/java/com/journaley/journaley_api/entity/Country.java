@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "countries")
+@Table(
+        name = "countries",
+        uniqueConstraints = @UniqueConstraint(name = "uk_countries_user_slug", columnNames = { "user_id", "slug" }))
 public class Country {
 
     @Id
@@ -37,6 +40,10 @@ public class Country {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    /** URL segment for routing, unique per user (e.g. trip-highlights/:slug). */
+    @Column(name = "slug", nullable = false, length = 160)
+    private String slug;
 
     @Column(name = "iso_code")
     private String isoCode;
