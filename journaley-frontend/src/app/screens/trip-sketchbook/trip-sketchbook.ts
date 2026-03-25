@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Dropdown, DropdownOption } from '../../components/dropdown/dropdown';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
@@ -15,6 +15,7 @@ import { DeleteCity } from '../../modals/delete-city/delete-city';
 import { DeleteEntry } from '../../modals/delete-entry/delete-entry';
 import { EditEntry } from '../../modals/edit-entry/edit-entry';
 import { CreateEntry } from '../../modals/create-entry/create-entry';
+import { AuthService } from '../../core/auth.service';
 
 export interface SketchbookEntry {
   id: string;
@@ -51,7 +52,14 @@ export class TripSketchbook {
   /** From trip-highlights navigation state; used so Back returns to the same country filter. */
   highlightsCountryKey = '';
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   readonly dialog = inject(MatDialog);
+
+  logout(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login');
+  }
 
   cityItems: SectionListItem[] = [
     { id: 'tokyo', label: 'Tokyo' },

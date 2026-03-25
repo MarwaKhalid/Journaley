@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { ImgCard } from '../../components/img-card/img-card';
 import { SearchField } from '../../components/search-field/search-field';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
+import { AuthService } from '../../core/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCountry } from '../../modals/create-country/create-country';
 import { DeleteCountry } from '../../modals/delete-country/delete-country';
@@ -37,7 +38,13 @@ interface Country {
 })
 export class Home implements OnInit {
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   readonly dialog = inject(MatDialog);
+
+  logout(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login');
+  }
 
   openCreateCountryDialog() {
     const dialogRef = this.dialog.open(CreateCountry);
