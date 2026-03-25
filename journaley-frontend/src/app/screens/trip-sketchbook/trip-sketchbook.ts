@@ -12,6 +12,9 @@ import { TabBar } from '../../components/tab-bar/tab-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCity } from '../../modals/create-city/create-city';
 import { DeleteCity } from '../../modals/delete-city/delete-city';
+import { DeleteEntry } from '../../modals/delete-entry/delete-entry';
+import { EditEntry } from '../../modals/edit-entry/edit-entry';
+import { CreateEntry } from '../../modals/create-entry/create-entry';
 
 export interface SketchbookEntry {
   id: string;
@@ -309,6 +312,88 @@ export class TripSketchbook {
             this.selectedCityId = next?.id ?? '';
             this.selectedCity = next?.label ?? '';
           }
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  openCreateEntryDialog(): void {
+    const cityId = this.selectedCityId || this.cityItems[0]?.id || 'tokyo';
+    const category = this.activeCategory;
+
+    if (category !== 'Restaurants' && category !== 'Notes' && category !== 'Activities') {
+      return;
+    }
+
+    const cityOptions: DropdownOption[] = this.cityItems.map((city) => ({
+      label: city.label,
+      value: city.id,
+    }));
+
+    const dialogRef = this.dialog.open(CreateEntry, {
+      data: {
+        category,
+        cityId,
+        cityOptions, // Pass city options
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.title) {
+        setTimeout(() => {
+          const newEntry: SketchbookEntry = {
+            id:
+              typeof crypto !== 'undefined' && crypto.randomUUID
+                ? crypto.randomUUID()
+                : `e-${Date.now()}`,
+            title: result.title,
+            address: result.address || '',
+            review: result.review || '',
+            rating: result.rating || 5,
+            cityId: result.cityId, // Use the selected city from dialog
+            category: category as SketchbookEntryActivity,
+          };
+
+          this.entries = [...this.entries, newEntry];
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  openEditEntryDialog(entry: SketchbookEntry): void {
+    const cityOptions: DropdownOption[] = this.cityItems.map((city) => ({
+      label: city.label,
+      value: city.id,
+    }));
+
+    const dialogRef = this.dialog.open(EditEntry, {
+      data: {
+        ...entry,
+        cityOptions, // Pass the city options to the dialog
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        setTimeout(() => {
+          this.entries = this.entries.map((e) => (e.id === entry.id ? { ...e, ...result } : e));
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  openDeleteEntryDialog(entry: SketchbookEntry): void {
+    const dialogRef = this.dialog.open(DeleteEntry, {
+      data: entry,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        setTimeout(() => {
+          this.entries = this.entries.filter((e) => e.id !== entry.id);
           this.cdr.detectChanges();
         }, 0);
       }

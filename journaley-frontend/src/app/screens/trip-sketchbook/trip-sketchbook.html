@@ -109,7 +109,7 @@
               btn_type="add"
               placeholder="Add Entry"
               variant="muted"
-              (btnClick)="onAddEntry()"
+              (btnClick)="openCreateEntryDialog()"
             ></app-icon-text-button>
           </div>
 
@@ -149,8 +149,8 @@
                 [activityFieldSuffix]="entry.id"
                 [allowActivityChange]="true"
                 (activityChange)="onEntryActivityChange(entry, $event)"
-                (editClick)="onEditEntry(entry)"
-                (deleteClick)="onDeleteEntry(entry)"
+                (editClick)="openEditEntryDialog(entry)"
+                (deleteClick)="openDeleteEntryDialog(entry)"
               ></app-info-card>
             }
           </div>

@@ -1,37 +1,37 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { InputField } from '../../components/input-field/input-field';
-import { DescriptionField } from '../../components/description-field/description-field';
 import { TextButton } from '../../components/buttons/text-button/text-button';
+import { DescriptionField } from '../../components/description-field/description-field';
 import { Dropdown, DropdownOption } from '../../components/dropdown/dropdown';
 import { RatingField } from '../../components/rating-field/rating-field';
 
 @Component({
-  selector: 'app-create-entry-dialog',
+  selector: 'app-edit-entry',
   imports: [
     MatDialogModule,
     MatButtonModule,
     InputField,
-    DescriptionField,
     TextButton,
+    DescriptionField,
     Dropdown,
     RatingField,
   ],
-  templateUrl: './create-entry.html',
-  styleUrl: './create-entry.css',
+  templateUrl: './edit-entry.html',
+  styleUrl: './edit-entry.css',
 })
-export class CreateEntry {
+export class EditEntry {
   readonly data = inject(MAT_DIALOG_DATA);
-  readonly dialogRef = inject(MatDialogRef<CreateEntry>);
-
-  entryName: string = '';
-  entryLocation: string = '';
-  entryDescription: string = '';
-  entryRating: number = 5;
-  selectedCityId: string = this.data.cityId;
-
+  readonly dialogRef = inject(MatDialogRef<EditEntry>);
   readonly cityOptions: DropdownOption[] = this.data.cityOptions || [];
+
+  entryName: string = this.data.title;
+  entryLocation: string = this.data.address;
+  entryDescription: string = this.data.review;
+  entryRating: number = this.data.rating;
+  cityFilter = 'all';
+  selectedCityId: string = this.data.cityId;
 
   onSubmit() {
     if (!this.entryName.trim()) return;
