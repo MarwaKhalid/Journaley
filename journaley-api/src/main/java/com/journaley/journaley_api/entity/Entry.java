@@ -10,22 +10,26 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "entries")
 public class Entry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pk")
-    private Integer id;
+    private Long id;
 
     @Column(name = "trip_id", nullable = false)
-    private Integer tripId;
+    private Long tripId;
 
     @Column(name = "name", nullable = false)
     private String name;
