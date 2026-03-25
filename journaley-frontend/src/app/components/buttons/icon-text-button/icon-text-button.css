@@ -1,7 +1,7 @@
 button {
   border: none;
   background-color: var(--color-tan);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
   font-size: var(--text-sm);
   width: 130px;
 }

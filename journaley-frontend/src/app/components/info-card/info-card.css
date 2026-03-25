@@ -31,7 +31,7 @@
   background-color: var(--color-tan);
   color: var(--color-black);
   font-size: var(--text-xs);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .info-badge--city {
@@ -45,11 +45,11 @@
   background-color: var(--color-white);
   color: var(--color-black);
   font-size: var(--text-xs);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
   cursor: pointer;
 }
 
 .info-activity-select:focus-visible {
-  outline: 2px solid var(--color-black);
+  /* outline: 2px solid var(--color-black); */
   outline-offset: 2px;
 }

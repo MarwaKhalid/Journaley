@@ -157,14 +157,14 @@ button {
   gap: 0.5rem 0.75rem;
   color: var(--color-black);
   font-size: var(--text-xl);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
 
 .sketchbook-city-label {
   flex: 0 0 auto;
   color: var(--color-grey);
   font-size: var(--text-md);
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
