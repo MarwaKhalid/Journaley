@@ -47,3 +47,8 @@ body {
 .mat-mdc-dialog-container * {
   font-family: 'Lobster', cursive !important;
 }
+
+.mat-mdc-dialog-container {
+  width: 600px !important;
+  max-width: 100vw;
+}
