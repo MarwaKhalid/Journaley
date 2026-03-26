@@ -47,7 +47,7 @@
           <app-text-button
             btn_type="submit"
             placeholder="Register"
-            (btnClick)="onSubmit()"
+            [active]="!submitting"
           ></app-text-button>
         </div>
       </form>

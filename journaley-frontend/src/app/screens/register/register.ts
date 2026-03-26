@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TextButton } from '../../components/buttons/text-button/text-button';
 import { InputField } from '../../components/input-field/input-field';
@@ -16,7 +17,7 @@ interface ErrorBody {
 
 @Component({
   selector: 'app-register',
-  imports: [TextButton, InputField, RouterLink],
+  imports: [FormsModule, TextButton, InputField, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -24,6 +25,7 @@ export class Register {
   private readonly http = inject(HttpClient);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   name = '';
   email = '';
@@ -64,6 +66,8 @@ export class Register {
           this.submitting = false;
           const body = err.error as ErrorBody | undefined;
           this.errorMessage = body?.error ?? err.message ?? 'Registration failed.';
+          // Ensure UI updates even in zoneless setups.
+          this.cdr.detectChanges();
         },
       });
   }
