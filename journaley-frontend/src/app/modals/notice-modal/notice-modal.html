@@ -1,0 +1,13 @@
+<div class="d-flex justify-content-center mt-4">
+  <div class="rounded-circle icon-btn d-flex justify-content-center align-items-center">
+    <i class="bi bi-exclamation-lg"></i>
+  </div>
+</div>
+<h2 class="modal-title text-center" mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <p class="sub-text">{{ data.message }}</p>
+</mat-dialog-content>
+<div class="mt-3"></div>
+<mat-dialog-actions>
+  <app-text-button btn_type="submit" placeholder="OK" (btnClick)="dialogRef.close()"></app-text-button>
+</mat-dialog-actions>

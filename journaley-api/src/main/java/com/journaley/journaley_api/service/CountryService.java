@@ -19,22 +19,26 @@ import com.journaley.journaley_api.entity.CountryImages;
 import com.journaley.journaley_api.entity.User;
 import com.journaley.journaley_api.repository.CountryImagesRepository;
 import com.journaley.journaley_api.repository.CountryRepository;
+import com.journaley.journaley_api.repository.TripRepository;
 import com.journaley.journaley_api.repository.UserRepository;
 
 @Service
 public class CountryService {
     private final CountryRepository countryRepository;
     private final CountryImagesRepository countryImagesRepository;
+    private final TripRepository tripRepository;
     private final UserRepository userRepository;
     private final CountryImageStorageService imageStorageService;
 
     public CountryService(
             CountryRepository countryRepository,
             CountryImagesRepository countryImagesRepository,
+            TripRepository tripRepository,
             UserRepository userRepository,
             CountryImageStorageService imageStorageService) {
         this.countryRepository = countryRepository;
         this.countryImagesRepository = countryImagesRepository;
+        this.tripRepository = tripRepository;
         this.userRepository = userRepository;
         this.imageStorageService = imageStorageService;
     }
@@ -95,6 +99,9 @@ public class CountryService {
     public void deleteCountryById(Long id, String email) {
         User user = requireUser(email);
         requireOwnedCountry(id, user.getId());
+        if (tripRepository.existsByCountry_Id(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Delete trips (and their cities/entries) first.");
+        }
         deleteImageArtifacts(id);
         countryRepository.deleteById(id);
     }
