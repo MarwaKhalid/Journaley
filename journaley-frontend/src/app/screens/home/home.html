@@ -25,14 +25,8 @@
     >
     </app-icon-text-button>
   </div>
-  <p-carousel
-    [value]="visibleCountries()"
-    [numVisible]="3"
-    [numScroll]="1"
-    [circular]="true"
-    [responsiveOptions]="responsiveOptions"
-  >
-    <ng-template let-country pTemplate="item">
+  <div class="countries-grid">
+    @for (country of visibleCountries; track country.id) {
       <div
         class="home-country-tile"
         role="link"
@@ -50,6 +44,6 @@
         >
         </app-img-card>
       </div>
-    </ng-template>
-  </p-carousel>
+    }
+  </div>
 </div>
