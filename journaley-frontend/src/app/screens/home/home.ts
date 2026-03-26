@@ -2,9 +2,6 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { CarouselModule } from 'primeng/carousel';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 import { ImgCard } from '../../components/img-card/img-card';
 import { SearchField } from '../../components/search-field/search-field';
 import { IconTextButton } from '../../components/buttons/icon-text-button/icon-text-button';
@@ -28,16 +25,7 @@ interface CountryApiDto {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    CarouselModule,
-    ButtonModule,
-    TagModule,
-    ImgCard,
-    SearchField,
-    IconTextButton,
-  ],
+  imports: [CommonModule, RouterLink, ImgCard, SearchField, IconTextButton],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -55,25 +43,30 @@ export class Home implements OnInit {
   openCreateCountryDialog() {
     const dialogRef = this.dialog.open(CreateCountry);
 
-    dialogRef.afterClosed().subscribe((result: { name: string; file?: File | null } | undefined) => {
-      if (!result?.name?.trim()) {
-        return;
-      }
-      const name = result.name.trim();
-      const file = result.file ?? null;
-      this.http.post<CountryApiDto>(`${API_BASE_URL}/api/countries`, { name }).subscribe({
-        next: (created) => {
-          if (file) {
-            this.postCountryImage(created.id, file, () => this.loadCountries(), (err) =>
-              this.setHttpError(err, 'Country created but image upload failed.'),
-            );
-          } else {
-            this.loadCountries();
-          }
-        },
-        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not create country.'),
+    dialogRef
+      .afterClosed()
+      .subscribe((result: { name: string; file?: File | null } | undefined) => {
+        if (!result?.name?.trim()) {
+          return;
+        }
+        const name = result.name.trim();
+        const file = result.file ?? null;
+        this.http.post<CountryApiDto>(`${API_BASE_URL}/api/countries`, { name }).subscribe({
+          next: (created) => {
+            if (file) {
+              this.postCountryImage(
+                created.id,
+                file,
+                () => this.loadCountries(),
+                (err) => this.setHttpError(err, 'Country created but image upload failed.'),
+              );
+            } else {
+              this.loadCountries();
+            }
+          },
+          error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not create country.'),
+        });
       });
-    });
   }
 
   openEditCountryDialog(country: Country) {
@@ -87,18 +80,23 @@ export class Home implements OnInit {
       }
       const name = result.name.trim();
       const file = result.file ?? null;
-      this.http.put<CountryApiDto>(`${API_BASE_URL}/api/countries/${country.id}`, { name }).subscribe({
-        next: () => {
-          if (file) {
-            this.postCountryImage(country.id, file, () => this.loadCountries(), (err) =>
-              this.setHttpError(err, 'Country updated but image upload failed.'),
-            );
-          } else {
-            this.loadCountries();
-          }
-        },
-        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not update country.'),
-      });
+      this.http
+        .put<CountryApiDto>(`${API_BASE_URL}/api/countries/${country.id}`, { name })
+        .subscribe({
+          next: () => {
+            if (file) {
+              this.postCountryImage(
+                country.id,
+                file,
+                () => this.loadCountries(),
+                (err) => this.setHttpError(err, 'Country updated but image upload failed.'),
+              );
+            } else {
+              this.loadCountries();
+            }
+          },
+          error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not update country.'),
+        });
     });
   }
 
@@ -118,27 +116,20 @@ export class Home implements OnInit {
     });
   }
 
-  searchQuery = '';
+  searchQuery = signal('');
   countries = signal<Country[]>([]);
   countriesError = signal('');
 
-  visibleCountries = computed(() => {
-    const q = this.searchQuery.trim().toLowerCase();
+  get visibleCountries(): Country[] {
+    const q = this.searchQuery().trim().toLowerCase();
     const all = this.countries();
     if (!q) {
       return all;
     }
     return all.filter((c) => c.name.toLowerCase().includes(q));
-  });
-  responsiveOptions: { breakpoint: string; numVisible: number; numScroll: number }[] = [];
+  }
 
   ngOnInit() {
-    this.responsiveOptions = [
-      { breakpoint: '1400px', numVisible: 3, numScroll: 1 },
-      { breakpoint: '1199px', numVisible: 2, numScroll: 1 },
-      { breakpoint: '767px', numVisible: 1, numScroll: 1 },
-      { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-    ];
     this.loadCountries();
   }
 
