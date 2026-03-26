@@ -114,13 +114,14 @@ export class Home implements OnInit {
         next: () => this.loadCountries(),
         error: (err: HttpErrorResponse) => {
           const message = this.getHttpErrorMessage(err);
-          const isBlockedDelete = err.status === 409 || message.toLowerCase().includes('delete trips');
+          const isBlockedDelete =
+            err.status === 409 || message.toLowerCase().includes('delete trips');
           if (isBlockedDelete) {
             this.countriesError.set('');
             this.dialog.open(NoticeModal, {
               data: {
                 title: 'Cannot Delete Country',
-                message: message || 'Delete trips (and their cities/entries) first.',
+                message: message || 'Delete trips first.',
               },
             });
             return;
