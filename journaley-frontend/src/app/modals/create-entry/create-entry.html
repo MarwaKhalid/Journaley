@@ -8,6 +8,14 @@
   >
   </app-dropdown>
   <div class="mb-3"></div>
+  <app-dropdown
+    label="Category"
+    [hidePlaceholderOption]="true"
+    [options]="categoryOptions"
+    [(value)]="selectedCategory"
+  >
+  </app-dropdown>
+  <div class="mb-3"></div>
   <app-input-field
     label="Name"
     id="entry-name"
@@ -15,7 +23,12 @@
     [(value)]="entryName"
   ></app-input-field>
   <div class="mb-3"></div>
-  <app-rating-field id="entry-rating" [readonly]="false"></app-rating-field>
+  <app-rating-field
+    id="entry-rating"
+    [readonly]="false"
+    [rating]="entryRating"
+    (ratingChange)="entryRating = $event"
+  ></app-rating-field>
   <div class="mb-3"></div>
   <app-input-field
     label="Location"

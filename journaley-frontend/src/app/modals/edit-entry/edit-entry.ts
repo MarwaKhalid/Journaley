@@ -25,6 +25,11 @@ export class EditEntry {
   readonly data = inject(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<EditEntry>);
   readonly cityOptions: DropdownOption[] = this.data.cityOptions || [];
+  readonly categoryOptions: DropdownOption[] = [
+    { label: 'Restaurants', value: 'Restaurants' },
+    { label: 'Hotel', value: 'Hotel' },
+    { label: 'Activities', value: 'Activities' },
+  ];
 
   entryName: string = this.data.title;
   entryLocation: string = this.data.address;
@@ -32,6 +37,7 @@ export class EditEntry {
   entryRating: number = this.data.rating;
   cityFilter = 'all';
   selectedCityId: string = this.data.cityId;
+  selectedCategory: string = this.data.category ?? 'Restaurants';
 
   onSubmit() {
     if (!this.entryName.trim()) return;
@@ -42,6 +48,7 @@ export class EditEntry {
       review: this.entryDescription,
       rating: this.entryRating,
       cityId: this.selectedCityId,
+      category: this.selectedCategory,
     });
   }
 }

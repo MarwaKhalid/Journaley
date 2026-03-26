@@ -1,0 +1,2 @@
+{"sessionId":"d01587","runId":"pre-fix","hypothesisId":"H1","location":"TripService.java:deleteTrip","message":"Deleting trip with dependent cleanup","data":{"tripId":2},"timestamp":1774534286190}
+{"sessionId":"d01587","runId":"pre-fix","hypothesisId":"H1","location":"TripService.java:deleteTrip","message":"Trip deleted successfully","data":{"tripId":2},"timestamp":1774534286216}

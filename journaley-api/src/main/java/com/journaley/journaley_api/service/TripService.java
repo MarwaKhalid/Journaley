@@ -6,7 +6,10 @@ import com.journaley.journaley_api.entity.Country;
 import com.journaley.journaley_api.entity.Trip;
 import com.journaley.journaley_api.entity.TripImages;
 import com.journaley.journaley_api.entity.User;
+import com.journaley.journaley_api.repository.CityRepository;
 import com.journaley.journaley_api.repository.CountryRepository;
+import com.journaley.journaley_api.repository.EntryRepository;
+import com.journaley.journaley_api.repository.PersonalReflectionsRepository;
 import com.journaley.journaley_api.repository.TripRepository;
 import com.journaley.journaley_api.repository.TripImagesRepository;
 import com.journaley.journaley_api.repository.UserRepository;
@@ -21,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Service
 public class TripService {
@@ -29,17 +34,26 @@ public class TripService {
     private final TripImagesRepository tripImagesRepository;
     private final UserRepository userRepository;
     private final TripImageStorageService tripImageStorageService;
+    private final CityRepository cityRepository;
+    private final EntryRepository entryRepository;
+    private final PersonalReflectionsRepository personalReflectionsRepository;
 
     public TripService(TripRepository tripRepository,
                       CountryRepository countryRepository,
                       TripImagesRepository tripImagesRepository,
                       UserRepository userRepository,
-                      TripImageStorageService tripImageStorageService) {
+                      TripImageStorageService tripImageStorageService,
+                      CityRepository cityRepository,
+                      EntryRepository entryRepository,
+                      PersonalReflectionsRepository personalReflectionsRepository) {
         this.tripRepository = tripRepository;
         this.countryRepository = countryRepository;
         this.tripImagesRepository = tripImagesRepository;
         this.userRepository = userRepository;
         this.tripImageStorageService = tripImageStorageService;
+        this.cityRepository = cityRepository;
+        this.entryRepository = entryRepository;
+        this.personalReflectionsRepository = personalReflectionsRepository;
     }
 
     public TripResponseDTO getTripByIdForCountry(Long countryId, String email, Long tripId) {
@@ -135,8 +149,20 @@ public class TripService {
             throw new RuntimeException("Unauthorized access to this trip");
         }
 
+        // #region agent log
+        try { Files.writeString(Path.of("debug-d01587.log"), "{\"sessionId\":\"d01587\",\"runId\":\"pre-fix\",\"hypothesisId\":\"H1\",\"location\":\"TripService.java:deleteTrip\",\"message\":\"Deleting trip with dependent cleanup\",\"data\":{\"tripId\":" + tripId + "},\"timestamp\":" + System.currentTimeMillis() + "}\n", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception __e) {}
+        // #endregion
+
+        // Delete dependent rows first to satisfy FK constraints.
+        entryRepository.deleteByTripId(tripId);
+        cityRepository.deleteByTripId(tripId);
+        personalReflectionsRepository.deleteByTripId(tripId);
         deleteTripImageArtifacts(tripId);
         tripRepository.deleteById(tripId);
+
+        // #region agent log
+        try { Files.writeString(Path.of("debug-d01587.log"), "{\"sessionId\":\"d01587\",\"runId\":\"pre-fix\",\"hypothesisId\":\"H1\",\"location\":\"TripService.java:deleteTrip\",\"message\":\"Trip deleted successfully\",\"data\":{\"tripId\":" + tripId + "},\"timestamp\":" + System.currentTimeMillis() + "}\n", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception __e) {}
+        // #endregion
     }
 
     @Transactional

@@ -30,8 +30,14 @@ export class CreateEntry {
   entryDescription: string = '';
   entryRating: number = 5;
   selectedCityId: string = this.data.cityId;
+  selectedCategory: string = this.data.category ?? 'Restaurants';
 
   readonly cityOptions: DropdownOption[] = this.data.cityOptions || [];
+  readonly categoryOptions: DropdownOption[] = [
+    { label: 'Restaurants', value: 'Restaurants' },
+    { label: 'Hotel', value: 'Hotel' },
+    { label: 'Activities', value: 'Activities' },
+  ];
 
   onSubmit() {
     if (!this.entryName.trim()) return;
@@ -42,6 +48,7 @@ export class CreateEntry {
       review: this.entryDescription,
       rating: this.entryRating,
       cityId: this.selectedCityId,
+      category: this.selectedCategory,
     });
   }
 }

@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface PersonalReflectionsRepository extends JpaRepository<PersonalReflections, Long> {
     Optional<PersonalReflections> findByTripId(Long tripId);
+    void deleteByTripId(Long tripId);
 }
 

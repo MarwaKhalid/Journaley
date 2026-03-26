@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface EntryRepository extends JpaRepository<Entry, Long> {
     List<Entry> findByTripIdAndCityIdOrderByCreatedAtDesc(Long tripId, Long cityId);
     Optional<Entry> findByIdAndTripId(Long id, Long tripId);
+    void deleteByTripId(Long tripId);
 }
 

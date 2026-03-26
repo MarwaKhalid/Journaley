@@ -158,8 +158,7 @@
                 [cityLabel]="cityLabelForEntry(entry.cityId)"
                 [activityLabel]="entry.category"
                 [activityFieldSuffix]="'' + entry.id"
-                [allowActivityChange]="true"
-                (activityChange)="onEntryActivityChange(entry, $event)"
+                [allowActivityChange]="false"
                 (editClick)="openEditEntryDialog(entry)"
                 (deleteClick)="openDeleteEntryDialog(entry)"
               ></app-info-card>
