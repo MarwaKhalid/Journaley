@@ -4,7 +4,7 @@ import { IconButton } from '../buttons/icon-button/icon-button';
 /** Tab-aligned types for sketchbook entries (not Personal). */
 export const SKETCHBOOK_ENTRY_ACTIVITY_OPTIONS = [
   'Restaurants',
-  'Notes',
+  'Hotel',
   'Activities',
 ] as const;
 
@@ -24,7 +24,7 @@ export class InfoCard {
   @Input() rating = 5;
   /** City name for display (e.g. Tokyo). */
   @Input() cityLabel = '';
-  /** Activity tab this entry belongs to (Restaurants, Notes, Activities). */
+  /** Activity tab this entry belongs to (Restaurants, Hotel, Activities). */
   @Input() activityLabel = '';
   /** Suffix for unique form control ids (e.g. entry id). */
   @Input() activityFieldSuffix = '';

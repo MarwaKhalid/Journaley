@@ -14,7 +14,8 @@
             label="Email"
             placeholder="Email"
             id="login-email"
-            [(value)]="email"
+            [value]="email"
+            (valueChange)="onEmailChange($event)"
           ></app-input-field>
         </div>
         <div class="mb-3">
@@ -23,14 +24,15 @@
             placeholder="Password"
             id="login-pass"
             type="password"
-            [(value)]="password"
+            [value]="password"
+            (valueChange)="onPasswordChange($event)"
           ></app-input-field>
         </div>
         <div class="mt-2">
           <app-text-button
             btn_type="submit"
             placeholder="Login"
-            (btnClick)="onSubmit()"
+            [active]="!submitting"
           ></app-text-button>
         </div>
       </form>

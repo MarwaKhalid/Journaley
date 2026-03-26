@@ -10,4 +10,6 @@ public interface TripRepository extends JpaRepository<Trip, Long> {  // Changed 
 
     @Query("SELECT t FROM Trip t WHERE t.country.id = :countryId")
     List<Trip> findByCountryId(@Param("countryId") Long countryId);
+
+    boolean existsByCountry_Id(Long countryId);
 }

@@ -25,6 +25,7 @@ export class CreateTrip {
   readonly dialogRef = inject(MatDialogRef<CreateTrip>);
 
   tripName: string = '';
+  tripSummary: string = '';
   tripPeople: string = '';
   image1: File | null = null;
   image2: File | null = null;
@@ -47,9 +48,11 @@ export class CreateTrip {
 
     this.dialogRef.close({
       name: this.tripName,
-      bodyText: '', // You don't have this field in your form
-      traveledWith: this.tripPeople,
-      photos: [], // You'll need to handle image uploads
+      summary: this.tripSummary,
+      people: this.tripPeople,
+      image1: this.image1,
+      image2: this.image2,
+      image3: this.image3,
       countryKey: this.data?.countryKey,
     });
   }

@@ -1,8 +1,9 @@
 <button
-  type="button"
+  [attr.type]="btn_type === 'submit' ? 'submit' : 'button'"
   class="btn w-100"
   (click)="onClick()"
   [ngClass]="[btn_type, active ? '' : 'inactive']"
+  [disabled]="!active"
 >
   {{ placeholder }}
 </button>

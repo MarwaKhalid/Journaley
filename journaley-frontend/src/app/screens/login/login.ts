@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TextButton } from '../../components/buttons/text-button/text-button';
 import { InputField } from '../../components/input-field/input-field';
@@ -16,7 +17,7 @@ interface ErrorBody {
 
 @Component({
   selector: 'app-login',
-  imports: [TextButton, InputField, RouterLink],
+  imports: [FormsModule, TextButton, InputField, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -25,11 +26,20 @@ export class Login {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   email = '';
   password = '';
   errorMessage = '';
   submitting = false;
+
+  onEmailChange(v: string): void {
+    this.email = v;
+  }
+
+  onPasswordChange(v: string): void {
+    this.password = v;
+  }
 
   onSubmit() {
     this.errorMessage = '';
@@ -47,6 +57,8 @@ export class Login {
           if (!res?.token) {
             this.submitting = false;
             this.errorMessage = 'Invalid response from server (no token).';
+            // Ensure UI updates even in zoneless setups.
+            this.cdr.detectChanges();
             return;
           }
           this.auth.setToken(res.token);
@@ -56,6 +68,8 @@ export class Login {
         error: (err: HttpErrorResponse) => {
           this.submitting = false;
           this.errorMessage = this.parseLoginError(err);
+          // Ensure UI updates even in zoneless setups.
+          this.cdr.detectChanges();
         },
       });
   }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,10 +17,12 @@ public class TripResponseDTO {
     private String name;
     private String summary;
     private String people;
+    /** Sorted by image sort_order; may be empty. */
+    private List<String> imageUrls;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static TripResponseDTO fromEntity(Trip trip) {
+    public static TripResponseDTO fromEntity(Trip trip, List<String> imageUrls) {
         return new TripResponseDTO(
             trip.getId(),
             trip.getCountry().getId(),
@@ -27,6 +30,7 @@ public class TripResponseDTO {
             trip.getName(),
             trip.getSummary(),
             trip.getPeople(),  // Added people field
+            imageUrls,
             trip.getCreatedAt(),
             trip.getUpdatedAt()
         );

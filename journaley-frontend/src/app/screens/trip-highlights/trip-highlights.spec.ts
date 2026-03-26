@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
@@ -12,8 +15,10 @@ describe('TripHighlights', () => {
     const paramMap$ = new BehaviorSubject(convertToParamMap({}));
 
     await TestBed.configureTestingModule({
-      imports: [TripHighlights],
+      imports: [TripHighlights, MatDialogModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         provideRouter([]),
         {
           provide: ActivatedRoute,

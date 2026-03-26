@@ -8,6 +8,12 @@
   ></app-input-field>
   <div class="mb-3"></div>
   <app-description-field
+    label="Trip Summary"
+    placeholder="What made it special?"
+    [(value)]="tripSummary"
+  ></app-description-field>
+  <div class="mb-3"></div>
+  <app-description-field
     label="People Traveled With"
     placeholder="Names"
     [(value)]="tripPeople"

@@ -2,7 +2,9 @@ package com.journaley.journaley_api.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.journaley.journaley_api.dto.TripRequestDTO;
 import com.journaley.journaley_api.dto.TripResponseDTO;
@@ -58,5 +60,16 @@ public class TripController {
             @PathVariable Long tripId,  // Changed to Long
             @AuthenticationPrincipal UserDetails userDetails) {
         tripService.deleteTrip(tripId, userDetails.getUsername());
+    }
+
+    @PostMapping(value = "/{tripId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadTripImages(
+            @PathVariable Long countryId,
+            @PathVariable Long tripId,
+            @RequestPart(value = "file1", required = false) MultipartFile file1,
+            @RequestPart(value = "file2", required = false) MultipartFile file2,
+            @RequestPart(value = "file3", required = false) MultipartFile file3,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        tripService.uploadTripImages(countryId, tripId, userDetails.getUsername(), file1, file2, file3);
     }
 }

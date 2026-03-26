@@ -19,6 +19,13 @@
     <div class="sketchbook-main-inner container-fluid py-3 pb-5">
       <a [routerLink]="highlightsBackLink" class="sketchbook-back">← Back to trip</a>
 
+      @if (loading) {
+        <div class="alert alert-info mt-3" role="status">Loading…</div>
+      }
+      @if (errorMessage) {
+        <div class="alert alert-danger mt-3" role="alert">{{ errorMessage }}</div>
+      }
+
       <div class="text-center mt-3 mb-4">
         <h1 class="sketchbook-page-title mb-1">Trip Sketchbook</h1>
         @if (tripDisplayName) {
@@ -51,6 +58,10 @@
               ></app-icon-text-button>
             }
           </div>
+
+          @if (reflectionsSaveMessage) {
+            <div class="alert alert-success mb-3" role="status">{{ reflectionsSaveMessage }}</div>
+          }
 
           <div class="sketchbook-reflection-inner">
             <div class="sketchbook-reflection-fields">
@@ -146,9 +157,8 @@
                 [rating]="entry.rating"
                 [cityLabel]="cityLabelForEntry(entry.cityId)"
                 [activityLabel]="entry.category"
-                [activityFieldSuffix]="entry.id"
-                [allowActivityChange]="true"
-                (activityChange)="onEntryActivityChange(entry, $event)"
+                [activityFieldSuffix]="'' + entry.id"
+                [allowActivityChange]="false"
                 (editClick)="openEditEntryDialog(entry)"
                 (deleteClick)="openDeleteEntryDialog(entry)"
               ></app-info-card>

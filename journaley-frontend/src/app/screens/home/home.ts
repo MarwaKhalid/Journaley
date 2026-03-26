@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateCountry } from '../../modals/create-country/create-country';
 import { DeleteCountry } from '../../modals/delete-country/delete-country';
 import { EditCountry, EditCountryResult } from '../../modals/edit-country/edit-country';
+import { NoticeModal } from '../../modals/notice-modal/notice-modal';
 import type { Country } from '../../models/country.model';
 
 /** Country row from GET /api/countries */
@@ -111,7 +112,22 @@ export class Home implements OnInit {
       }
       this.http.delete<void>(`${API_BASE_URL}/api/countries/${country.id}`).subscribe({
         next: () => this.loadCountries(),
-        error: (err: HttpErrorResponse) => this.setHttpError(err, 'Could not delete country.'),
+        error: (err: HttpErrorResponse) => {
+          const message = this.getHttpErrorMessage(err);
+          const isBlockedDelete =
+            err.status === 409 || message.toLowerCase().includes('delete trips');
+          if (isBlockedDelete) {
+            this.countriesError.set('');
+            this.dialog.open(NoticeModal, {
+              data: {
+                title: 'Cannot Delete Country',
+                message: message || 'Delete trips first.',
+              },
+            });
+            return;
+          }
+          this.setHttpError(err, 'Could not delete country.');
+        },
       });
     });
   }
@@ -164,8 +180,12 @@ export class Home implements OnInit {
   }
 
   private setHttpError(err: HttpErrorResponse, fallback: string): void {
+    this.countriesError.set(this.getHttpErrorMessage(err) || fallback);
+  }
+
+  private getHttpErrorMessage(err: HttpErrorResponse): string {
     const body = err.error as { error?: string; message?: string } | null;
-    this.countriesError.set(body?.error ?? body?.message ?? err.message ?? fallback);
+    return body?.error ?? body?.message ?? err.message ?? '';
   }
 
   openCountryTrips(country: Country): void {

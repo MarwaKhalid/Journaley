@@ -1,3 +1,4 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -7,45 +8,33 @@ import {
   TripHighlightsMain,
 } from '../../components/trip-highlights-main/trip-highlights-main';
 import { SectionList, SectionListItem } from '../../components/section-list/section-list';
-import { DeleteTrip } from '../../modals/delete-trip/delete-trip';
-import { MatDialog } from '@angular/material/dialog';
 import { CreateTrip } from '../../modals/create-trip/create-trip';
+import { DeleteTrip } from '../../modals/delete-trip/delete-trip';
+import { API_BASE_URL } from '../../core/api.config';
 import { AuthService } from '../../core/auth.service';
+import { MatDialog } from '@angular/material/dialog';
 
-const JAPAN_PHOTOS: TripHighlightPhoto[] = [
-  { imageSrc: 'https://picsum.photos/seed/journaley-ramen/400/400', alt: 'Bowl of ramen' },
-  { imageSrc: 'https://picsum.photos/seed/journaley-temple/400/400', alt: 'Pagoda at sunset' },
-  { imageSrc: 'https://picsum.photos/seed/journaley-beach/400/400', alt: 'Friends on the beach' },
-];
-
-const COAST_PHOTOS: TripHighlightPhoto[] = [
-  { imageSrc: 'https://picsum.photos/seed/journaley-coast1/400/400', alt: 'Coastal view' },
-  { imageSrc: 'https://picsum.photos/seed/journaley-coast2/400/400', alt: 'Boardwalk' },
-];
-
-const BRAZIL_PHOTOS: TripHighlightPhoto[] = [
-  { imageSrc: 'https://picsum.photos/seed/journaley-brazil1/400/400', alt: 'City skyline' },
-  { imageSrc: 'https://picsum.photos/seed/journaley-brazil2/400/400', alt: 'Beach' },
-];
-
-const ITALY_PHOTOS: TripHighlightPhoto[] = [
-  { imageSrc: 'https://picsum.photos/seed/journaley-italy1/400/400', alt: 'Canal view' },
-];
-
-const FRANCE_PHOTOS: TripHighlightPhoto[] = [
-  { imageSrc: 'https://picsum.photos/seed/journaley-france1/400/400', alt: 'Street café' },
-];
-
-export interface TripRecord {
-  id: string;
-  /** Lowercase slug matching home / route, e.g. japan, brazil. */
-  countryKey: string;
-  /** Sidebar label and default card title. */
+interface CountryApiDto {
+  id: number;
   name: string;
-  heading: string;
-  bodyText: string;
+  slug: string;
+  imageUrl: string | null;
+}
+
+interface TripApiDto {
+  id: number;
+  name: string;
+  summary: string;
+  people: string | null;
+  imageUrls?: string[];
+}
+
+interface TripRecord {
+  id: number;
+  name: string;
+  summary: string;
+  people: string;
   photos: TripHighlightPhoto[];
-  traveledWith: string;
 }
 
 @Component({
@@ -58,6 +47,7 @@ export class TripHighlights {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly auth = inject(AuthService);
+  private readonly http = inject(HttpClient);
   readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -66,94 +56,20 @@ export class TripHighlights {
     void this.router.navigateByUrl('/login');
   }
 
-  /** From URL `trip-highlights/:countryKey`; empty = all countries. */
+  /** From URL `trip-highlights/:countryKey`; empty = not supported for API-backed trips. */
   countryKey = '';
+  countryId: number | null = null;
+  tripsError = '';
 
-  private static readonly countryLabels: Record<string, string> = {
-    japan: 'Japan',
-    usa: 'USA',
-    italy: 'Italy',
-    brazil: 'Brazil',
-    france: 'France',
-  };
+  private countries: CountryApiDto[] = [];
+  private tripsList: TripRecord[] = [];
 
-  private static newTripId(): string {
-    return typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : `trip-${Date.now()}`;
+  /** Default to first trip when list loads. */
+  selectedTripId: number | null = null;
+
+  get selectedTripIdStr(): string | null {
+    return this.selectedTripId == null ? null : String(this.selectedTripId);
   }
-
-  /** All trips (in-memory); filtered by `countryKey` for the sidebar and main panel. */
-  private allTrips: TripRecord[] = [
-    {
-      id: 'japan-2024',
-      countryKey: 'japan',
-      name: 'Japan 2024',
-      heading: 'Japan 2024',
-      bodyText:
-        'Our two-week adventure through Japan was unforgettable, from the neon-lit streets of Tokyo to the serene temples of Kyoto. The trip was perfectly timed for cherry blossom season.',
-      photos: JAPAN_PHOTOS,
-      traveledWith: 'A, B, C',
-    },
-    {
-      id: 'japan-kyoto-spring',
-      countryKey: 'japan',
-      name: 'Kyoto spring weekend',
-      heading: 'Kyoto spring weekend',
-      bodyText: 'Temples, matcha, and early cherry blossoms in the old capital.',
-      photos: JAPAN_PHOTOS.slice(0, 2),
-      traveledWith: 'Alex',
-    },
-    {
-      id: 'california-coast',
-      countryKey: 'usa',
-      name: 'California coast',
-      heading: 'California coast',
-      bodyText:
-        'Highway 1, foggy mornings, and long sunsets — a slow drive with plenty of stops for tacos and tide pools.',
-      photos: COAST_PHOTOS,
-      traveledWith: 'Sam',
-    },
-    {
-      id: 'brazil-rio',
-      countryKey: 'brazil',
-      name: 'Rio summer',
-      heading: 'Rio summer',
-      bodyText: 'Christ the Redeemer, Copacabana sunsets, and feijoada with new friends.',
-      photos: BRAZIL_PHOTOS,
-      traveledWith: 'Maya, João',
-    },
-    {
-      id: 'brazil-sp',
-      countryKey: 'brazil',
-      name: 'São Paulo food crawl',
-      heading: 'São Paulo food crawl',
-      bodyText: 'Markets, pastel de feira, and a lot of coffee in Vila Madalena.',
-      photos: BRAZIL_PHOTOS,
-      traveledWith: 'Leo',
-    },
-    {
-      id: 'italy-venice',
-      countryKey: 'italy',
-      name: 'Venice & Verona',
-      heading: 'Venice & Verona',
-      bodyText: 'Gondolas, cicchetti bars, and an opera night in the arena.',
-      photos: ITALY_PHOTOS,
-      traveledWith: 'Chris',
-    },
-    {
-      id: 'france-paris',
-      countryKey: 'france',
-      name: 'Paris long weekend',
-      heading: 'Paris long weekend',
-      bodyText: 'Museums by day, bistros by night — classic Left Bank wandering.',
-      photos: FRANCE_PHOTOS,
-      traveledWith: 'Jordan',
-    },
-  ];
-
-  /** Sidebar row id; synced when route or list changes. */
-  selectedTripId = '';
 
   constructor() {
     this.route.paramMap
@@ -163,47 +79,100 @@ export class TripHighlights {
       )
       .subscribe((key) => {
         this.countryKey = key;
-        this.syncSelectionToFilteredTrips();
+        this.resolveCountryAndLoadTrips();
       });
   }
 
-  get trips(): TripRecord[] {
+  private resolveCountryAndLoadTrips(): void {
+    this.tripsError = '';
+    this.countryId = null;
+    this.tripsList = [];
+
     if (!this.countryKey) {
-      return this.allTrips;
+      this.tripsError = 'Select a country from Home to view its trips.';
+      return;
     }
-    return this.allTrips.filter((t) => t.countryKey === this.countryKey);
+
+    this.http.get<CountryApiDto[]>(`${API_BASE_URL}/api/countries`).subscribe({
+      next: (rows) => {
+        this.countries = rows;
+        const match = rows.find((c) => c.slug === this.countryKey);
+        if (!match) {
+          this.tripsError = `Country '${this.countryKey}' not found.`;
+          return;
+        }
+        this.countryId = match.id;
+        this.loadTrips(match.id);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.tripsError = this.parseHttpError(err, 'Could not load countries.');
+      },
+    });
+  }
+
+  private loadTrips(countryId: number): void {
+    this.tripsError = '';
+    this.http.get<TripApiDto[]>(`${API_BASE_URL}/api/countries/${countryId}/trips`).subscribe({
+      next: (rows) => {
+        this.tripsList = rows.map((t) => ({
+          id: t.id,
+          name: t.name,
+          summary: t.summary,
+          people: t.people ?? '',
+          photos: (t.imageUrls ?? []).map((u) => ({ imageSrc: u })),
+        }));
+        if (this.tripsList.length) {
+          if (!this.tripsList.some((t) => t.id === this.selectedTripId)) {
+            this.selectedTripId = this.tripsList[0].id;
+          }
+        } else {
+          this.selectedTripId = null;
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.tripsError = this.parseHttpError(err, 'Could not load trips.');
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  get trips(): TripRecord[] {
+    return this.tripsList;
   }
 
   get countryLabel(): string {
-    if (!this.countryKey) {
-      return '';
-    }
-    return TripHighlights.countryLabels[this.countryKey] ?? this.titleCaseSlug(this.countryKey);
+    const match = this.countries.find((c) => c.slug === this.countryKey);
+    return match?.name ?? this.titleCaseSlug(this.countryKey);
   }
 
   get tripListItems(): SectionListItem[] {
     return this.trips.map((t) => ({
-      id: t.id,
+      id: String(t.id),
       label: t.name,
       deletable: true,
     }));
   }
 
+  get canEditTrip(): boolean {
+    return !!this.selectedTrip;
+  }
+
   get mainHeading(): string {
-    return this.selectedTrip?.heading ?? 'Trip highlights';
+    return this.selectedTrip?.name ?? 'Trip highlights';
   }
 
   get mainBodyText(): string {
-    if (!this.trips.length) {
-      if (this.countryKey) {
-        return `No trips yet for ${this.countryLabel}. Add one with the + button.`;
-      }
-      return 'Add a trip with the + button to start your highlights.';
+    if (this.tripsError) {
+      return this.tripsError;
     }
-    return (
-      this.selectedTrip?.bodyText ??
-      'No description yet — use Edit Trip when you hook up your form.'
-    );
+    if (!this.trips.length) {
+      return `No trips yet for ${this.countryLabel}. Add one with the + button.`;
+    }
+    if (!this.selectedTrip) {
+      return 'Select a trip from the sidebar to view its highlights.';
+    }
+    return this.selectedTrip.summary || 'No summary yet.';
   }
 
   get mainPhotos(): TripHighlightPhoto[] {
@@ -211,18 +180,119 @@ export class TripHighlights {
   }
 
   get mainTraveledWith(): string {
-    return this.selectedTrip?.traveledWith ?? '';
+    return this.selectedTrip?.people ?? '';
   }
 
   private get selectedTrip(): TripRecord | undefined {
+    if (this.selectedTripId == null) return undefined;
     return this.trips.find((t) => t.id === this.selectedTripId);
   }
 
-  private syncSelectionToFilteredTrips(): void {
-    const list = this.trips;
-    if (!list.some((t) => t.id === this.selectedTripId)) {
-      this.selectedTripId = list[0]?.id ?? '';
+  onTripRow(item: SectionListItem): void {
+    const id = Number(item.id);
+    this.selectedTripId = Number.isFinite(id) ? id : null;
+  }
+
+  openCreateTripDialog() {
+    const dialogRef = this.dialog.open(CreateTrip, {
+      data: { countryKey: this.countryKey },
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (!result?.name?.trim()) return;
+      if (this.countryId == null) {
+        this.tripsError = 'Select a country first.';
+        return;
+      }
+
+      const payload = {
+        name: String(result.name).trim(),
+        summary: String(result.summary ?? '').trim() || 'Trip summary',
+        people: String(result.people ?? '').trim(),
+      };
+
+      this.http
+        .post<TripApiDto>(`${API_BASE_URL}/api/countries/${this.countryId}/trips`, payload)
+        .subscribe({
+          next: (created) => {
+            this.selectedTripId = created.id;
+            const image1: File | null = result.image1 ?? null;
+            const image2: File | null = result.image2 ?? null;
+            const image3: File | null = result.image3 ?? null;
+
+            if (image1 || image2 || image3) {
+              const form = new FormData();
+              if (image1) form.append('file1', image1, image1.name);
+              if (image2) form.append('file2', image2, image2.name);
+              if (image3) form.append('file3', image3, image3.name);
+              this.http
+                .post<void>(
+                  `${API_BASE_URL}/api/countries/${this.countryId}/trips/${created.id}/images`,
+                  form,
+                )
+                .subscribe({
+                  next: () => this.loadTrips(this.countryId!),
+                  error: (err: HttpErrorResponse) => {
+                    this.tripsError = this.parseHttpError(
+                      err,
+                      'Trip created but image upload failed.',
+                    );
+                    this.loadTrips(this.countryId!);
+                  },
+                });
+            } else {
+              this.loadTrips(this.countryId!);
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            this.tripsError = this.parseHttpError(err, 'Could not create trip.');
+          },
+        });
+    });
+  }
+
+  openDeleteTripDialog(item: SectionListItem) {
+    const id = Number(item.id);
+    const trip = this.trips.find((t) => t.id === id);
+    if (!trip) return;
+
+    const dialogRef = this.dialog.open(DeleteTrip, {
+      data: trip,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed || this.countryId == null) return;
+      this.http
+        .delete<void>(`${API_BASE_URL}/api/countries/${this.countryId}/trips/${trip.id}`)
+        .subscribe({
+          next: () => {
+            if (this.selectedTripId === trip.id) this.selectedTripId = null;
+            this.loadTrips(this.countryId!);
+            this.cdr.detectChanges();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.tripsError = this.parseHttpError(err, 'Could not delete trip.');
+          },
+        });
+    });
+  }
+
+  onEditTrip(): void {
+    const id = this.selectedTripId;
+    const navState =
+      this.countryId != null
+        ? { countryId: this.countryId, ...(this.countryKey ? { countryKey: this.countryKey } : {}) }
+        : this.countryKey
+          ? { countryKey: this.countryKey }
+          : {};
+    if (id == null || !this.selectedTrip) {
+      this.router.navigate(['/trip-sketchbook'], { state: navState });
+      return;
     }
+    const trip = this.selectedTrip;
+    this.router.navigate(['/trip-sketchbook', id], {
+      state: { tripName: trip.name, ...navState },
+    });
   }
 
   private titleCaseSlug(slug: string): string {
@@ -233,113 +303,8 @@ export class TripHighlights {
       .join(' ');
   }
 
-  onTripRow(item: SectionListItem): void {
-    this.selectedTripId = item.id;
-  }
-
-  onAddTrip(): void {
-    const suggested = 'New trip';
-    const name =
-      typeof globalThis.prompt === 'function'
-        ? globalThis.prompt('Name this trip', suggested)
-        : suggested;
-    if (name === null) {
-      return;
-    }
-    const trimmed = name.trim();
-    if (!trimmed) {
-      return;
-    }
-    const id = TripHighlights.newTripId();
-    const keyForNew =
-      this.countryKey ||
-      (typeof globalThis.prompt === 'function'
-        ? (globalThis.prompt('Country code (e.g. japan, brazil)', 'japan') ?? '')
-            .toLowerCase()
-            .trim()
-        : 'japan');
-    this.allTrips = [
-      ...this.allTrips,
-      {
-        id,
-        countryKey: keyForNew || 'other',
-        name: trimmed,
-        heading: trimmed,
-        bodyText: 'Add a description for this trip.',
-        photos: [],
-        traveledWith: '',
-      },
-    ];
-    this.selectedTripId = id;
-  }
-
-  onDeleteTrip(item: SectionListItem): void {
-    this.allTrips = this.allTrips.filter((t) => t.id !== item.id);
-    if (this.selectedTripId === item.id) {
-      this.selectedTripId = this.trips[0]?.id ?? '';
-    }
-  }
-
-  openCreateTripDialog() {
-    const dialogRef = this.dialog.open(CreateTrip, {
-      data: { countryKey: this.countryKey },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result && result.name) {
-        // Wrap in setTimeout to avoid change detection error
-        setTimeout(() => {
-          const id = TripHighlights.newTripId();
-          const keyForNew = this.countryKey || result.countryKey || 'other';
-
-          this.allTrips = [
-            ...this.allTrips,
-            {
-              id,
-              countryKey: keyForNew,
-              name: result.name,
-              heading: result.name,
-              bodyText: result.bodyText || 'Add a description for this trip.',
-              photos: result.photos || [],
-              traveledWith: result.traveledWith || '',
-            },
-          ];
-          this.selectedTripId = id;
-          this.cdr.detectChanges();
-        }, 0);
-      }
-    });
-  }
-
-  openDeleteTripDialog(item: SectionListItem) {
-    const trip = this.allTrips.find((t) => t.id === item.id);
-    if (!trip) return;
-
-    const dialogRef = this.dialog.open(DeleteTrip, {
-      data: trip,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        setTimeout(() => {
-          this.allTrips = this.allTrips.filter((t) => t.id !== item.id);
-          this.syncSelectionToFilteredTrips();
-          this.cdr.detectChanges();
-        }, 0);
-      }
-    });
-  }
-
-  onEditTrip(): void {
-    const id = this.selectedTripId;
-    const navState = this.countryKey ? { countryKey: this.countryKey } : {};
-    if (!id || !this.selectedTrip) {
-      this.router.navigate(['/trip-sketchbook'], { state: navState });
-      return;
-    }
-    const trip = this.selectedTrip;
-    this.router.navigate(['/trip-sketchbook', id], {
-      state: { tripName: trip.name, ...navState },
-    });
+  private parseHttpError(err: HttpErrorResponse, fallback: string): string {
+    const body = err.error as { error?: string; message?: string } | null;
+    return body?.error ?? body?.message ?? err.message ?? fallback;
   }
 }

@@ -16,13 +16,13 @@
   <button
     type="button"
     class="btn tab-btn d-flex align-items-center gap-1 rounded-pill"
-    (click)="setContent('Notes'); onClick()"
+    (click)="setContent('Hotel'); onClick()"
   >
     <i
       class="bi bi-journal-text"
-      [ngClass]="content === 'Notes' ? 'content-active' : 'content-inactive'"
+      [ngClass]="content === 'Hotel' ? 'content-active' : 'content-inactive'"
     ></i>
-    <span [ngClass]="content === 'Notes' ? 'content-active' : 'content-inactive'">Notes</span>
+    <span [ngClass]="content === 'Hotel' ? 'content-active' : 'content-inactive'">Hotel</span>
   </button>
 
   <button
