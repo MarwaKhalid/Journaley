@@ -63,3 +63,28 @@ button {
 .home-btns {
   padding: 0em 2.5em;
 }
+
+.countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.home-country-tile {
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.home-country-tile:hover {
+  transform: translateY(-4px);
+}
+
+.home-country-tile:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
