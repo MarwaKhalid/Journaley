@@ -100,7 +100,7 @@ public class CountryService {
         User user = requireUser(email);
         requireOwnedCountry(id, user.getId());
         if (tripRepository.existsByCountry_Id(id)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Delete trips first.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Please delete trips first.");
         }
         deleteImageArtifacts(id);
         countryRepository.deleteById(id);

@@ -121,7 +121,7 @@ export class Home implements OnInit {
             this.dialog.open(NoticeModal, {
               data: {
                 title: 'Cannot Delete Country',
-                message: message || 'Delete trips first.',
+                message: message || 'Please delete trips first.',
               },
             });
             return;
