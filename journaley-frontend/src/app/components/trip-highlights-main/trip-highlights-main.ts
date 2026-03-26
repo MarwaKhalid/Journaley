@@ -26,6 +26,8 @@ export class TripHighlightsMain {
   @Input() photos: TripHighlightPhoto[] = DEFAULT_PHOTOS;
   /** Comma-separated names or a single string, e.g. "A, B, C". */
   @Input() traveledWith = 'A, B, C';
+  /** When false, hide the Edit Trip action. */
+  @Input() canEdit = false;
   @Output() editTrip = new EventEmitter<void>();
 
   onEdit(): void {

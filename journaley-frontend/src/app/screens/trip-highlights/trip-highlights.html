@@ -8,7 +8,7 @@
     <app-section-list
       title="Trips"
       [items]="tripListItems"
-      [selectedId]="selectedTripId"
+      [selectedId]="selectedTripIdStr"
       (addClick)="openCreateTripDialog()"
       (deleteClick)="openDeleteTripDialog($event)"
       (rowClick)="onTripRow($event)"
@@ -32,6 +32,7 @@
         [bodyText]="mainBodyText"
         [photos]="mainPhotos"
         [traveledWith]="mainTraveledWith"
+        [canEdit]="canEditTrip"
         (editTrip)="onEditTrip()"
       ></app-trip-highlights-main>
     </div>

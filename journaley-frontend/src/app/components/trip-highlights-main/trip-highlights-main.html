@@ -2,12 +2,14 @@
   <div class="thm-header-wrap">
     <h2 class="thm-title">{{ heading }}</h2>
     <div class="thm-edit-wrap">
-      <app-icon-text-button
-        btn_type="edit"
-        placeholder="Edit Trip"
-        variant="muted"
-        (btnClick)="onEdit()"
-      ></app-icon-text-button>
+      @if (canEdit) {
+        <app-icon-text-button
+          btn_type="edit"
+          placeholder="Edit Trip"
+          variant="muted"
+          (btnClick)="onEdit()"
+        ></app-icon-text-button>
+      }
     </div>
   </div>
   <p class="thm-body">{{ bodyText }}</p>
