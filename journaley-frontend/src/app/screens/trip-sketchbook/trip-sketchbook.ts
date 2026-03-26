@@ -95,37 +95,6 @@ export class TripSketchbook {
   reflectionsSaveMessage = '';
   private entriesRequestSeq = 0;
 
-  private debugLog(hypothesisId: string, location: string, message: string, data: Record<string, unknown>): void {
-    try {
-      const payload = {
-        sessionId: 'd01587',
-        runId: 'pre-fix',
-        hypothesisId,
-        location,
-        message,
-        data,
-        timestamp: Date.now(),
-      };
-      const body = JSON.stringify(payload);
-      // Prefer sendBeacon to avoid browser CORS blocking.
-      if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
-        navigator.sendBeacon(
-          'http://127.0.0.1:7571/ingest/a61fe508-f840-482d-8904-efdb04de2399',
-          new Blob([body], { type: 'application/json' }),
-        );
-        return;
-      }
-      fetch('http://127.0.0.1:7571/ingest/a61fe508-f840-482d-8904-efdb04de2399', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd01587' },
-        body,
-      }).catch(() => {});
-    } catch {
-      // ignore
-    }
-  }
-
   logout(): void {
     this.auth.logout();
     void this.router.navigateByUrl('/login');
@@ -257,12 +226,6 @@ export class TripSketchbook {
     this.selectedCityId = item.id;
     this.selectedCity = item.label;
     this.entries = [];
-    // #region agent log
-    this.debugLog('H2', 'trip-sketchbook.ts:onCityRow', 'City selected', {
-      selectedCityId: this.selectedCityId,
-      selectedCityLabel: this.selectedCity,
-    });
-    // #endregion
     void this.loadEntriesForSelectedCity();
   }
 
@@ -437,16 +400,6 @@ export class TripSketchbook {
     const seq = ++this.entriesRequestSeq;
     const selectedCityAtRequestStart = this.selectedCityId;
 
-    // #region agent log
-    this.debugLog('H2', 'trip-sketchbook.ts:loadEntriesForSelectedCity:start', 'Loading entries for city', {
-      tripId: this.tripId,
-      countryId: this.countryId,
-      selectedCityId: this.selectedCityId,
-      cityNum,
-      seq,
-    });
-    // #endregion
-
     try {
       const entries = await this.http
         .get<EntryApiDto[]>(
@@ -456,15 +409,6 @@ export class TripSketchbook {
 
       // Ignore out-of-order responses (user clicked cities quickly).
       if (seq !== this.entriesRequestSeq || this.selectedCityId !== selectedCityAtRequestStart) {
-        // #region agent log
-        this.debugLog('H4', 'trip-sketchbook.ts:loadEntriesForSelectedCity:stale', 'Ignoring stale entries response', {
-          seq,
-          latestSeq: this.entriesRequestSeq,
-          selectedCityAtRequestStart,
-          selectedCityIdNow: this.selectedCityId,
-          count: Array.isArray(entries) ? entries.length : null,
-        });
-        // #endregion
         return;
       }
 
@@ -478,18 +422,6 @@ export class TripSketchbook {
         category: this.normalizeCategory(e.category),
       }));
       this.cdr.detectChanges();
-
-      // #region agent log
-      this.debugLog('H3', 'trip-sketchbook.ts:loadEntriesForSelectedCity:success', 'Entries loaded', {
-        cityNum,
-        selectedCityId: this.selectedCityId,
-        activeCategory: this.activeCategory,
-        receivedCount: Array.isArray(entries) ? entries.length : null,
-        mappedCount: this.entries.length,
-        mappedCityIds: this.entries.slice(0, 10).map((x) => x.cityId),
-        mappedCategories: this.entries.slice(0, 10).map((x) => x.category),
-      });
-      // #endregion
     } catch (e) {
       if (seq !== this.entriesRequestSeq || this.selectedCityId !== selectedCityAtRequestStart) {
         return;
@@ -497,14 +429,6 @@ export class TripSketchbook {
       this.entries = [];
       this.errorMessage = this.parseHttpError(e, 'Could not load entries.');
       this.cdr.detectChanges();
-
-      // #region agent log
-      this.debugLog('H2', 'trip-sketchbook.ts:loadEntriesForSelectedCity:error', 'Entries load failed', {
-        cityNum,
-        selectedCityId: this.selectedCityId,
-        errorMessage: this.errorMessage,
-      });
-      // #endregion
     }
   }
 
@@ -575,15 +499,6 @@ export class TripSketchbook {
     if (this.tripId == null || this.countryId == null) return;
     this.errorMessage = '';
     try {
-      // #region agent log
-      this.debugLog('H1', 'trip-sketchbook.ts:createEntry:start', 'Creating entry', {
-        tripId: this.tripId,
-        countryId: this.countryId,
-        cityId,
-        selectedCityId: this.selectedCityId,
-        payloadSummary: { titleLen: (payload.title ?? '').length, rating: payload.rating, category: payload.category },
-      });
-      // #endregion
       await this.http
         .post<EntryApiDto>(
           `${API_BASE_URL}/api/countries/${this.countryId}/trips/${this.tripId}/cities/${cityId}/entries`,
@@ -592,14 +507,6 @@ export class TripSketchbook {
         .toPromise();
       await this.loadEntriesForSelectedCity();
       this.cdr.detectChanges();
-
-      // #region agent log
-      this.debugLog('H1', 'trip-sketchbook.ts:createEntry:afterReload', 'Create entry completed and reloaded', {
-        selectedCityId: this.selectedCityId,
-        entriesCount: this.entries.length,
-        topEntry: this.entries[0] ? { id: this.entries[0].id, cityId: this.entries[0].cityId, category: this.entries[0].category } : null,
-      });
-      // #endregion
     } catch (e) {
       this.errorMessage = this.parseHttpError(e, 'Could not create entry.');
     }

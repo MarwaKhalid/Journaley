@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @Service
 public class TripService {
@@ -112,13 +110,13 @@ public class TripService {
         trip.setCountry(country);
         trip.setName(request.getName());
         trip.setSummary(request.getSummary());
-        trip.setPeople(request.getPeople());  // Added people
+        trip.setPeople(request.getPeople());
 
         Trip saved = tripRepository.save(trip);
         return TripResponseDTO.fromEntity(saved, List.of());
     }
 
-    public TripResponseDTO updateTrip(Long tripId, TripRequestDTO request, String email) {  // Changed to Long
+    public TripResponseDTO updateTrip(Long tripId, TripRequestDTO request, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -131,14 +129,14 @@ public class TripService {
 
         trip.setName(request.getName());
         trip.setSummary(request.getSummary());
-        trip.setPeople(request.getPeople());  // Added people
+        trip.setPeople(request.getPeople());
 
         Trip updated = tripRepository.save(trip);
         return TripResponseDTO.fromEntity(updated, getTripImageUrls(updated.getId()));
     }
 
     @Transactional
-    public void deleteTrip(Long tripId, String email) {  // Changed to Long
+    public void deleteTrip(Long tripId, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -149,20 +147,12 @@ public class TripService {
             throw new RuntimeException("Unauthorized access to this trip");
         }
 
-        // #region agent log
-        try { Files.writeString(Path.of("debug-d01587.log"), "{\"sessionId\":\"d01587\",\"runId\":\"pre-fix\",\"hypothesisId\":\"H1\",\"location\":\"TripService.java:deleteTrip\",\"message\":\"Deleting trip with dependent cleanup\",\"data\":{\"tripId\":" + tripId + "},\"timestamp\":" + System.currentTimeMillis() + "}\n", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception __e) {}
-        // #endregion
-
         // Delete dependent rows first to satisfy FK constraints.
         entryRepository.deleteByTripId(tripId);
         cityRepository.deleteByTripId(tripId);
         personalReflectionsRepository.deleteByTripId(tripId);
         deleteTripImageArtifacts(tripId);
         tripRepository.deleteById(tripId);
-
-        // #region agent log
-        try { Files.writeString(Path.of("debug-d01587.log"), "{\"sessionId\":\"d01587\",\"runId\":\"pre-fix\",\"hypothesisId\":\"H1\",\"location\":\"TripService.java:deleteTrip\",\"message\":\"Trip deleted successfully\",\"data\":{\"tripId\":" + tripId + "},\"timestamp\":" + System.currentTimeMillis() + "}\n", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception __e) {}
-        // #endregion
     }
 
     @Transactional
