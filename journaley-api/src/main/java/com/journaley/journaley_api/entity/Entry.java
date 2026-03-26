@@ -31,6 +31,9 @@ public class Entry {
     @Column(name = "trip_id", nullable = false)
     private Long tripId;
 
+    @Column(name = "city_id", nullable = false)
+    private Long cityId;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -39,6 +42,16 @@ public class Entry {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "rating")
+    private Integer rating;
+
+    /**
+     * Entry category used by the sketchbook tab UI (e.g. Restaurants, Notes, Activities).
+     * Stored as a string for flexibility.
+     */
+    @Column(name = "category")
+    private String category;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

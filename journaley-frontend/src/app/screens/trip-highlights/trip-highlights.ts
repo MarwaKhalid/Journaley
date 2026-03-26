@@ -279,7 +279,12 @@ export class TripHighlights {
 
   onEditTrip(): void {
     const id = this.selectedTripId;
-    const navState = this.countryKey ? { countryKey: this.countryKey } : {};
+    const navState =
+      this.countryId != null
+        ? { countryId: this.countryId, ...(this.countryKey ? { countryKey: this.countryKey } : {}) }
+        : this.countryKey
+          ? { countryKey: this.countryKey }
+          : {};
     if (id == null || !this.selectedTrip) {
       this.router.navigate(['/trip-sketchbook'], { state: navState });
       return;
